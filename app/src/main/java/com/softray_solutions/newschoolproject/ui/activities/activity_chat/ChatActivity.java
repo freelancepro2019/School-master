@@ -20,19 +20,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.Gson;
 import com.softray_solutions.newschoolproject.R;
+import com.softray_solutions.newschoolproject.adapters.ChatAdapter;
 import com.softray_solutions.newschoolproject.data.network.service.Common;
 import com.softray_solutions.newschoolproject.databinding.ActivityChatBinding;
 import com.softray_solutions.newschoolproject.model.ChatUserModel;
 import com.softray_solutions.newschoolproject.model.FileModel;
+import com.softray_solutions.newschoolproject.model.MessageModel;
 import com.softray_solutions.newschoolproject.model.User;
 import com.softray_solutions.newschoolproject.ui.activities.activity_file.FileActivity;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
     private ActivityChatBinding binding;
@@ -45,7 +50,8 @@ public class ChatActivity extends AppCompatActivity {
     private String read_perm = Manifest.permission.READ_EXTERNAL_STORAGE;
     private String write_perm = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     private String camera_perm = Manifest.permission.CAMERA;
-
+    private ChatAdapter adapter;
+    private List<MessageModel> messageModelList;
 
 
 
@@ -67,7 +73,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void initView() {
-
+        messageModelList = new ArrayList<>();
         binding.progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
         binding.refreshLayout.setColorSchemeResources(R.color.colorAccent);
         setSupportActionBar(binding.toolBar);
@@ -82,6 +88,9 @@ public class ChatActivity extends AppCompatActivity {
         binding.tvName.setText(chatUserModel.getFrom_name());
         Picasso.get().load(Uri.parse(chatUserModel.getFrom_image())).placeholder(R.drawable.default_avatar).fit().into(binding.imageAvatar);
 
+        adapter = new ChatAdapter(messageModelList, this, user.getId(), chatUserModel.getFrom_image());
+        binding.recView.setLayoutManager(new LinearLayoutManager(this));
+        binding.recView.setAdapter(adapter);
 
         binding.imageFile.setOnClickListener(view -> {
             checkPermission();
@@ -120,6 +129,8 @@ public class ChatActivity extends AppCompatActivity {
             checkCameraPermission();
 
         } );
+
+
     }
 
 
