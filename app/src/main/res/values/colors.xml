@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#265C82</color>
+    <color name="colorPrimaryDark">#1E4562</color>
+    <color name="colorAccent">#4CBBA9</color>
+    <color name="login_text_color">#6B8596</color>
+    <color name="dark_blue">#123854</color>
+    <color name="some_color">#678296</color>
+    <color name="bottom_navigation_color">#89A6BC</color>
+    <color name="drawer_items_color">#89BEB1</color>
+    <color name="light_gray">#ccc</color>
+    <color name="gray0">#fafafa</color>
+    <color name="gray1">#f5f5f5</color>
+    <color name="gray2">#eee</color>
+    <color name="gray3">#e0e0e0</color>
+    <color name="gray4">#bababa</color>
+    <color name="gray5">#c3c3c3</color>
+    <color name="gray6">#a0a0a0</color>
+    <color name="gray7">#f8f8f8</color>
+    <color name="black">#000</color>
+    <color name="transparent">#00000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="schedule">#F6F6F6</color>
+    <color name="schedule_text_color">#4CBBA9</color>
+    <color name="activity_background_color">#FAFAFA</color>
+    <color name="dark_gray">#707070</color>
+    <color name="selected_row">#447377</color>
+</resources>

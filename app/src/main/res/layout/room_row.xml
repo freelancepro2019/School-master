@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="model"
+            type="com.softray_solutions.newschoolproject.model.RoomModel.Records" />
+        <variable
+            name="userId"
+            type="String" />
+        <variable
+            name="time"
+            type="String" />
+
+        <import type="android.view.View"/>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:src="@drawable/default_avatar"
+
+            />
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/image"
+            app:layout_constraintStart_toEndOf="@id/image"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:lines="1"
+            android:ellipsize="end"
+            app:layout_constraintBottom_toTopOf="@id/tvMessage"
+            android:text='@{model.from_userName}'
+            android:textAlignment="viewStart"
+            />
+
+        <TextView
+            android:id="@+id/tvFromName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/dark_gray"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/tvName"
+            app:layout_constraintTop_toTopOf="@id/tvMessage"
+            app:layout_constraintBottom_toBottomOf="@id/tvMessage"
+            android:text="@string/you"
+            android:visibility='@{model.from_user.equals(userId)?View.VISIBLE:View.GONE,default=gone}'
+            />
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tvName"
+            app:layout_constraintStart_toEndOf="@id/tvFromName"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="14sp"
+            android:lines="1"
+            android:ellipsize="end"
+            android:textColor="@color/dark_gray"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            app:layout_goneMarginStart="0dp"
+            app:layout_goneMarginEnd="0dp"
+            android:maxEms="8"
+            android:text='@{model.msg_text!=null?model.msg_text:(!model.attachment.isEmpty()?@string/sent_attachment:"")}'
+
+            />
+
+
+
+
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/tvMessage"
+            app:layout_constraintBottom_toBottomOf="@id/tvMessage"
+            app:layout_constraintStart_toEndOf="@id/tvMessage"
+            app:layout_constraintEnd_toStartOf="@id/imageUnread"
+            android:textColor="@color/dark_gray"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:textSize="12sp"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintWidth_default="wrap"
+            android:text='@{time}'
+
+            />
+
+        <ImageView
+            android:id="@+id/imageUnread"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            app:layout_constraintTop_toTopOf="@id/tvMessage"
+            app:layout_constraintBottom_toBottomOf="@id/tvMessage"
+            app:layout_constraintEnd_toEndOf="@id/tvName"
+            android:background="@drawable/circle_primary"
+            android:visibility='@{model.read.equals("0")?View.VISIBLE:View.GONE,default=gone}'
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

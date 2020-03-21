@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: com.hendraanggrian:reveallayout:0.5.3@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/900fbda4531d304ed4132a77f6ed1419/reveallayout-0.5.3/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/900fbda4531d304ed4132a77f6ed1419/reveallayout-0.5.3/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.hendraanggrian/reveallayout/0.5.3/cf4d7c28e6ee31185669ba7d436dacff26cec335/reveallayout-0.5.3-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.hendraanggrian/reveallayout/0.5.3/8329d717efb96dd9d2b2fb8a32a9f000be3ef2fc/reveallayout-0.5.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

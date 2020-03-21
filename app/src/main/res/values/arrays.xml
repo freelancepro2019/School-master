@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="ld_activityScreenTitles">
+        <item>@string/login_drawer</item>
+        <item>@string/logout_drawer</item>
+        <item>@string/feedback_drawer</item>
+        <item>@string/info_drawer</item>
+
+    </string-array>
+
+    <array name="ld_activityScreenIcons">
+        <item>@drawable/ic_drawer_login</item>
+        <item>@drawable/ic_drawer_logout</item>
+        <item>@drawable/ic_drawer_feedback</item>
+        <item>@drawable/ic_drawer_info</item>
+    </array>
+
+    <string-array name="students_tools_titles">
+        <item>@string/classes_schedule</item>
+        <item>@string/revisions</item>
+        <item>@string/ask_your_teacher</item>
+        <item>@string/homework</item>
+        <item>@string/lessons_preparation</item>
+        <item>@string/week_plan</item>
+
+    </string-array>
+
+    <string-array name="parent_tools_titles">
+        <item>@string/classes_schedule</item>
+        <!--        <item>@string/students_evaluation</item>-->
+        <item>@string/account_statement</item>
+        <item>@string/payment_receipt</item>
+        <item>@string/homework</item>
+        <item>@string/week_plan</item>
+
+    </string-array>
+
+    <string-array name="teacher_tools_titles">
+        <item>@string/classes_schedule</item>
+        <item>@string/revisions</item>
+        <item>@string/ask_your_teacher</item>
+        <item>@string/students_evaluation</item>
+        <item>@string/homework</item>
+        <item>@string/lessons_preparation</item>
+        <item>@string/week_plan</item>
+
+    </string-array>
+
+    <array name="student_tools_images">
+        <item>@drawable/classes_table_image</item>
+        <item>@drawable/revisions_image</item>
+        <item>@drawable/ask_teacher_image</item>
+        <item>@drawable/homework_image</item>
+        <item>@drawable/lesson_preparation_image</item>
+        <item>@drawable/week_plan_image</item>
+    </array>
+    <array name="parent_tools_images">
+        <item>@drawable/classes_table_image</item>
+        <!--        <item>@drawable/student_evaluation_image</item>-->
+        <item>@drawable/account_balance_image</item>
+        <item>@drawable/payment_image</item>
+        <item>@drawable/homework_image</item>
+        <item>@drawable/week_plan_image</item>
+
+    </array>
+    <array name="teacher_tools_images">
+        <item>@drawable/classes_table_image</item>
+        <item>@drawable/revisions_image</item>
+        <item>@drawable/ask_teacher_image</item>
+        <item>@drawable/student_evaluation_image</item>
+        <item>@drawable/homework_image</item>
+        <item>@drawable/lesson_preparation_image</item>
+        <item>@drawable/week_plan_image</item>
+    </array>
+
+</resources>
