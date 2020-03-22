@@ -120,7 +120,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private String getTime(long time) {
-        return new SimpleDateFormat("dd/MMM/yyyy hh:mm", Locale.ENGLISH).format(new Date(time * 1000));
+        return new SimpleDateFormat("dd/MMM/yyyy hh:mm aa", Locale.ENGLISH).format(new Date(time * 1000));
     }
 
 

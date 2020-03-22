@@ -45,17 +45,34 @@
 
                 >
 
-                <TextView
-                    android:id="@+id/tv_file_content"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="270dp"
-                    android:text='@{url+model.attachment}'
-                    android:textColor="@color/white"
-                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+
+                        android:layout_width="20dp"
+                        android:layout_height="25dp"
+                        android:src='@{model.attachment.toLowerCase().endsWith(".pdf")?@drawable/pdf2:@drawable/word2}' />
 
 
-                    />
+                    <TextView
+                        android:id="@+id/tv_file_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:maxWidth="230dp"
+                        android:text='@{model.attachment}'
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+
+                        />
+                </LinearLayout>
+
+
 
                 <TextView
                     android:id="@+id/tv_msg_content"
