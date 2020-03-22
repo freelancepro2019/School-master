@@ -1,6 +1,7 @@
 package com.softray_solutions.newschoolproject.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -16,6 +17,7 @@ import com.softray_solutions.newschoolproject.databinding.ChatImageRightRowBindi
 import com.softray_solutions.newschoolproject.databinding.ChatMessageLeftRowBinding;
 import com.softray_solutions.newschoolproject.databinding.ChatMessageRightRowBinding;
 import com.softray_solutions.newschoolproject.model.MessageModel;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,6 +37,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private String current_user_id;
     private String chat_user_image;
     private LayoutInflater inflater;
+    private String base_url_image = "";
 
     public ChatAdapter(List<MessageModel> list, Context context, String current_user_id, String chat_user_image) {
         this.list = list;
@@ -88,20 +91,24 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             HolderImageLeft holderImageLeft = (HolderImageLeft) holder;
             holderImageLeft.binding.setModel(model);
             holderImageLeft.binding.tvTime.setText(getTime(Long.parseLong(model.getCreated_at())));
+            Picasso.get().load(Uri.parse(base_url_image + model.getAttachment())).fit().into(holderImageLeft.binding.image);
 
         } else if (holder instanceof HolderImageRight) {
             HolderImageRight holderImageRight = (HolderImageRight) holder;
             holderImageRight.binding.setModel(model);
             holderImageRight.binding.tvTime.setText(getTime(Long.parseLong(model.getCreated_at())));
+            Picasso.get().load(Uri.parse(base_url_image + model.getAttachment())).fit().into(holderImageRight.binding.image);
 
         } else if (holder instanceof HolderFileLeft) {
             HolderFileLeft holderFileLeft = (HolderFileLeft) holder;
             holderFileLeft.binding.setModel(model);
+            holderFileLeft.binding.setUrl(base_url_image);
             holderFileLeft.binding.tvTime.setText(getTime(Long.parseLong(model.getCreated_at())));
 
         } else if (holder instanceof HolderFileRight) {
             HolderFileRight holderFileRight = (HolderFileRight) holder;
             holderFileRight.binding.setModel(model);
+            holderFileRight.binding.setUrl(base_url_image);
             holderFileRight.binding.tvTime.setText(getTime(Long.parseLong(model.getCreated_at())));
 
         }
@@ -205,6 +212,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
         }
 
+    }
+
+    public void setBase_url_image(String url) {
+        this.base_url_image = url;
     }
 
 }

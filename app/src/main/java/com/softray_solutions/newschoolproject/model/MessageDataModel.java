@@ -6,6 +6,7 @@ import java.util.List;
 public class MessageDataModel implements Serializable {
     private List<MessageModel> records;
     private Count count;
+    private String base;
 
     public List<MessageModel> getRecords() {
         return records;
@@ -38,4 +39,7 @@ public class MessageDataModel implements Serializable {
         }
     }
 
+    public String getBase() {
+        return base;
+    }
 }

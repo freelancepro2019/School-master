@@ -54,6 +54,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     private ChatAdapter adapter;
     private List<MessageModel> messageModelList;
     private ChatPresenter presenter;
+    private LinearLayoutManager manager;
     private boolean isNewMessage = false;
 
 
@@ -79,7 +80,6 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         presenter = new ChatPresenter(this, this);
         messageModelList = new ArrayList<>();
         binding.progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
-        binding.refreshLayout.setColorSchemeResources(R.color.colorAccent);
         setSupportActionBar(binding.toolBar);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -94,7 +94,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
         adapter = new ChatAdapter(messageModelList, this, user.getId(), chatUserModel.getFrom_image());
 
-        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager = new LinearLayoutManager(this);
         manager.setStackFromEnd(true);
         binding.recView.setLayoutManager(manager);
         binding.recView.setAdapter(adapter);
@@ -145,6 +145,13 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
                 presenter.sendMessage(chatUserModel.getChat_id(), user.getId(), chatUserModel.getFrom_id(), message, attachment);
                 binding.edtMessage.setText("");
                 attachment = "";
+            }
+
+        });
+
+        binding.recView.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            if (bottom < oldBottom) {
+                binding.recView.postDelayed(() -> binding.recView.smoothScrollToPosition(messageModelList.size() - 1), 10);
             }
 
         });
@@ -316,14 +323,20 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         isNewMessage = true;
         messageModelList.add(messageModel);
         adapter.notifyItemInserted(messageModelList.size() - 1);
-        binding.recView.postDelayed(() -> binding.recView.smoothScrollToPosition(messageModelList.size() - 1), 500);
+        binding.recView.postDelayed(() -> binding.recView.smoothScrollToPosition(messageModelList.size() - 1), 100);
+
     }
 
     @Override
     public void onMessagesSuccess(MessageDataModel messageDataModel) {
+        if (adapter != null) {
+            adapter.setBase_url_image(messageDataModel.getBase());
+        }
         messageModelList.clear();
         messageModelList.addAll(messageDataModel.getRecords());
         adapter.notifyDataSetChanged();
+        binding.recView.postDelayed(() -> binding.recView.smoothScrollToPosition(messageModelList.size() - 1), 1500);
+
     }
 
     @Override

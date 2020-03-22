@@ -10,6 +10,9 @@
             name="model"
             type="com.softray_solutions.newschoolproject.model.MessageModel" />
 
+        <variable
+            name="url"
+            type="String" />
         <import type="android.view.View" />
 
     </data>
@@ -47,9 +50,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxWidth="270dp"
-                    android:text='@{model.base+model.attachment}'
+                    android:text='@{url+model.attachment}'
                     android:textColor="@color/white"
-                    android:textSize="14sp"
+                    android:textSize="15sp"
 
 
                     />
@@ -62,7 +65,7 @@
                     android:maxWidth="270dp"
                     android:text='@{model.msg_text??""}'
                     android:textColor="@color/white"
-                    android:textSize="14sp"
+                    android:textSize="15sp"
                     android:visibility='@{model.msg_text.isEmpty()?View.GONE:(model.msg_text==null?View.GONE:View.VISIBLE)}'
 
                     />
