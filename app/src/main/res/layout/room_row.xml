@@ -49,7 +49,7 @@
             android:lines="1"
             android:ellipsize="end"
             app:layout_constraintBottom_toTopOf="@id/tvMessage"
-            android:text='@{model.from_userName}'
+            android:text='@{model.from_user.equals(userId)?model.to_userName:model.from_userName}'
             android:textAlignment="viewStart"
             />
 

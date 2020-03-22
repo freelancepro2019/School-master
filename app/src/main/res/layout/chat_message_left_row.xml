@@ -53,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:maxWidth="270dp"
                     android:text='@{model.msg_text}'
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="14sp"
 
                     />
@@ -66,7 +66,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/gray2"
                     android:textSize="12sp" />
 
 

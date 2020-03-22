@@ -184,7 +184,16 @@ public class MessagesFragment extends Fragment implements MessagesView{
     public void setItemRoomData(RoomModel.Records model, int adapterPosition) {
 
         this.selected_room_pos =adapterPosition;
-        ChatUserModel chatUserModel = new ChatUserModel(model.getFrom_user(),model.getFrom_userName(),"",model.getChat_id(),model.getConversation_id());
+
+        ChatUserModel chatUserModel;
+
+        if (model.getFrom_user().equals(user.getId())) {
+            chatUserModel = new ChatUserModel(model.getTo_user(), model.getTo_userName(), "", model.getChat_id(), model.getConversation_id());
+
+        } else {
+            chatUserModel = new ChatUserModel(model.getFrom_user(), model.getFrom_userName(), "", model.getChat_id(), model.getConversation_id());
+
+        }
         Intent intent = new Intent(activity, ChatActivity.class);
         intent.putExtra("data",chatUserModel);
         startActivityForResult(intent,100);
@@ -196,6 +205,13 @@ public class MessagesFragment extends Fragment implements MessagesView{
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==100&&resultCode== Activity.RESULT_OK)
         {
+            if (data != null && data.hasExtra("refresh")) {
+                boolean refresh = data.getBooleanExtra("refresh", false);
+                if (refresh) {
+                    presenter.getRoomData(filter_by);
+                }
+            }
+
             if (selected_room_pos!=-1&&recordsList.size()>0)
             {
                 RoomModel.Records records = recordsList.get(selected_room_pos);
@@ -203,6 +219,8 @@ public class MessagesFragment extends Fragment implements MessagesView{
                 recordsList.set(selected_room_pos,records);
                 adapter.notifyItemChanged(selected_room_pos);
                 selected_room_pos = -1;
+
+
             }
         }
     }
@@ -257,4 +275,6 @@ public class MessagesFragment extends Fragment implements MessagesView{
         binding.refreshLayout.setRefreshing(false);
 
     }
+
+
 }

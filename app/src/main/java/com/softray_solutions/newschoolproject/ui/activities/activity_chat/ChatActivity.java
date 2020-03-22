@@ -29,6 +29,7 @@ import com.softray_solutions.newschoolproject.data.network.service.Common;
 import com.softray_solutions.newschoolproject.databinding.ActivityChatBinding;
 import com.softray_solutions.newschoolproject.model.ChatUserModel;
 import com.softray_solutions.newschoolproject.model.FileModel;
+import com.softray_solutions.newschoolproject.model.MessageDataModel;
 import com.softray_solutions.newschoolproject.model.MessageModel;
 import com.softray_solutions.newschoolproject.model.User;
 import com.softray_solutions.newschoolproject.ui.activities.activity_file.FileActivity;
@@ -39,7 +40,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity implements ChatView {
     private ActivityChatBinding binding;
     private ChatUserModel chatUserModel;
     private SharedPreferences preferences;
@@ -52,6 +53,8 @@ public class ChatActivity extends AppCompatActivity {
     private String camera_perm = Manifest.permission.CAMERA;
     private ChatAdapter adapter;
     private List<MessageModel> messageModelList;
+    private ChatPresenter presenter;
+    private boolean isNewMessage = false;
 
 
 
@@ -73,6 +76,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        presenter = new ChatPresenter(this, this);
         messageModelList = new ArrayList<>();
         binding.progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
         binding.refreshLayout.setColorSchemeResources(R.color.colorAccent);
@@ -89,7 +93,10 @@ public class ChatActivity extends AppCompatActivity {
         Picasso.get().load(Uri.parse(chatUserModel.getFrom_image())).placeholder(R.drawable.default_avatar).fit().into(binding.imageAvatar);
 
         adapter = new ChatAdapter(messageModelList, this, user.getId(), chatUserModel.getFrom_image());
-        binding.recView.setLayoutManager(new LinearLayoutManager(this));
+
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setStackFromEnd(true);
+        binding.recView.setLayoutManager(manager);
         binding.recView.setAdapter(adapter);
 
         binding.imageFile.setOnClickListener(view -> {
@@ -129,6 +136,21 @@ public class ChatActivity extends AppCompatActivity {
             checkCameraPermission();
 
         } );
+
+        binding.btnSend.setOnClickListener(view -> {
+            String message = binding.edtMessage.getText().toString().trim();
+            if (!message.isEmpty() || !attachment.isEmpty()) {
+
+                binding.cardView.setVisibility(View.GONE);
+                presenter.sendMessage(chatUserModel.getChat_id(), user.getId(), chatUserModel.getFrom_id(), message, attachment);
+                binding.edtMessage.setText("");
+                attachment = "";
+            }
+
+        });
+        Log.e("chat_id", chatUserModel.getChat_id() + "__conv" + chatUserModel.getConversation_id() + "_from" + chatUserModel.getFrom_id() + "__userid" + user.getId());
+
+        presenter.getAllChatMessages(chatUserModel.getChat_id(), chatUserModel.getConversation_id(), chatUserModel.getFrom_id(), user.getId());
 
 
     }
@@ -252,12 +274,9 @@ public class ChatActivity extends AppCompatActivity {
                 }
                 binding.cardView.setVisibility(View.VISIBLE);
 
-
-                Log.e("attachment",attachment);
-                uploadFile();
             }
 
-        }else if (requestCode==read_req2)
+        } else if (requestCode == read_req2 && resultCode == RESULT_OK && data != null)
         {
             Uri uri = data.getData();
             Picasso.get().load(uri).fit().into(binding.imageAttachment);
@@ -267,7 +286,7 @@ public class ChatActivity extends AppCompatActivity {
             binding.cardView.setVisibility(View.VISIBLE);
 
 
-        }else if (requestCode==camera_req)
+        } else if (requestCode == camera_req && resultCode == RESULT_OK && data != null)
         {
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             binding.imageAttachment.setImageBitmap(bitmap);
@@ -286,9 +305,38 @@ public class ChatActivity extends AppCompatActivity {
         return Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(),bitmap,"",""));
     }
 
-    private void uploadFile() {
 
-
+    @Override
+    public void hideProgress() {
+        binding.progBar.setVisibility(View.GONE);
     }
 
+    @Override
+    public void onMessageSendSuccess(MessageModel messageModel) {
+        isNewMessage = true;
+        messageModelList.add(messageModel);
+        adapter.notifyItemInserted(messageModelList.size() - 1);
+        binding.recView.postDelayed(() -> binding.recView.smoothScrollToPosition(messageModelList.size() - 1), 500);
+    }
+
+    @Override
+    public void onMessagesSuccess(MessageDataModel messageDataModel) {
+        messageModelList.clear();
+        messageModelList.addAll(messageDataModel.getRecords());
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onError(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = getIntent();
+        intent.putExtra("refresh", isNewMessage);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
 }

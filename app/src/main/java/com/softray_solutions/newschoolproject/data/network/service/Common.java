@@ -205,10 +205,12 @@ public class Common {
         return part;
 
     }
-    public static MultipartBody.Part getMultiPartVideo(Context context, Uri uri, String partName) {
-        File file = getFileFromImagePath(getImagePath(context, uri));
-        RequestBody requestBody = getRequestBodyVideo(file);
-        MultipartBody.Part part = MultipartBody.Part.createFormData(partName, System.currentTimeMillis()+".mp4", requestBody);
+
+    public static MultipartBody.Part getMultiPartFile(Context context, String path, String partName) {
+        File file = getFileFromImagePath(path);
+        String mim_type = file.getAbsolutePath().substring(file.getAbsoluteFile().toString().lastIndexOf("."));
+        RequestBody requestBody = getRequestBodyFile(file);
+        MultipartBody.Part part = MultipartBody.Part.createFormData(partName, System.currentTimeMillis() + mim_type, requestBody);
         return part;
 
     }
@@ -218,8 +220,8 @@ public class Common {
         return requestBody;
     }
 
-    private static RequestBody getRequestBodyVideo(File file) {
-        RequestBody requestBody = RequestBody.create(MediaType.parse("video/*"), file);
+    private static RequestBody getRequestBodyFile(File file) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
         return requestBody;
     }
 

@@ -128,7 +128,7 @@
                     android:textSize="14sp"
                     android:textColorHint="@color/gray4"
                     android:textColor="@color/black"
-                    android:textAlignment="viewStart"
+                    android:textAlignment="textStart"
 
                     />
                 <ImageView

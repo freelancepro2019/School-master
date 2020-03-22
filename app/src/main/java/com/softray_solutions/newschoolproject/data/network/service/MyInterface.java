@@ -7,6 +7,8 @@ import com.softray_solutions.newschoolproject.model.AskYourTeacher;
 import com.softray_solutions.newschoolproject.model.Homework;
 import com.softray_solutions.newschoolproject.model.Lesson;
 import com.softray_solutions.newschoolproject.model.LessonDetails;
+import com.softray_solutions.newschoolproject.model.MessageDataModel;
+import com.softray_solutions.newschoolproject.model.MessageModel;
 import com.softray_solutions.newschoolproject.model.News;
 import com.softray_solutions.newschoolproject.model.ObjectDataModel;
 import com.softray_solutions.newschoolproject.model.ParentNotificationDataModel;
@@ -283,5 +285,39 @@ public interface MyInterface {
     @GET("chatting/Api/listMessages")
     Call<RoomModel> getRoomDataFilterBy(@Query("id") String user_id,
                                         @Query("type") String type
-                                        );
+    );
+
+    @Multipart
+    @POST("chatting/Api/sendChatMessage")
+    Call<MessageModel> sendChatText(@Part("chat_id") RequestBody chat_id,
+                                    @Part("user_id") RequestBody user_id,
+                                    @Part("to_user") RequestBody to_user,
+                                    @Part("msg_text") RequestBody msg_text);
+
+    @Multipart
+    @POST("chatting/Api/sendChatMessage")
+    Call<MessageModel> sendChatFile(@Part("chat_id") RequestBody chat_id,
+                                    @Part("user_id") RequestBody user_id,
+                                    @Part("to_user") RequestBody to_user,
+                                    @Part MultipartBody.Part file
+    );
+
+    @Multipart
+    @POST("chatting/Api/sendChatMessage")
+    Call<MessageModel> sendChatTextFile(@Part("chat_id") RequestBody chat_id,
+                                        @Part("user_id") RequestBody user_id,
+                                        @Part("to_user") RequestBody to_user,
+                                        @Part("msg_text") RequestBody msg_text,
+                                        @Part MultipartBody.Part file
+    );
+
+    @FormUrlEncoded
+    @POST("chatting/Api/chat")
+    Call<MessageDataModel> getChatMessage(@Field("user_id") String user_id,
+                                          @Field("to_user") String to_user,
+                                          @Field("conversation_id") String conversation_id,
+                                          @Field("chat_id") String chat_id
+    );
+
+
 }

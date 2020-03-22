@@ -116,39 +116,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return new SimpleDateFormat("dd/MMM/yyyy hh:mm", Locale.ENGLISH).format(new Date(time * 1000));
     }
 
-    @Override
-    public int getItemViewType(int position) {
-
-        MessageModel messageModel = list.get(position);
-        if (!messageModel.getMsg_text().isEmpty()) {
-            if (messageModel.getFrom_user().equals(current_user_id)) {
-                return msg_right;
-            } else {
-                return msg_left;
-            }
-        } else if (!messageModel.getAttachment().isEmpty()) {
-            if (messageModel.getAttachment().toLowerCase().endsWith(".png") || messageModel.getAttachment().toLowerCase().endsWith(".jpeg") || messageModel.getAttachment().toLowerCase().endsWith(".jpg")) {
-                if (messageModel.getFrom_user().equals(current_user_id)) {
-                    return img_right;
-                } else {
-                    return img_left;
-                }
-            } else {
-                if (messageModel.getFrom_user().equals(current_user_id)) {
-                    return file_right;
-                } else {
-                    return file_left;
-                }
-            }
-        } else {
-            if (messageModel.getFrom_user().equals(current_user_id)) {
-                return msg_right;
-            } else {
-                return msg_left;
-            }
-        }
-
-    }
 
     public class HolderMsgLeft extends RecyclerView.ViewHolder {
         private ChatMessageLeftRowBinding binding;
@@ -204,4 +171,40 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             this.binding = binding;
         }
     }
+
+    @Override
+    public int getItemViewType(int position) {
+
+        MessageModel messageModel = list.get(position);
+
+        if (messageModel.getAttachment() != null && !messageModel.getAttachment().isEmpty()) {
+            if (messageModel.getAttachment().toLowerCase().endsWith(".png") || messageModel.getAttachment().toLowerCase().endsWith(".jpeg") || messageModel.getAttachment().toLowerCase().endsWith(".jpg")) {
+                if (messageModel.getFrom_user().equals(current_user_id)) {
+                    return img_right;
+                } else {
+                    return img_left;
+                }
+            } else {
+                if (messageModel.getFrom_user().equals(current_user_id)) {
+                    return file_right;
+                } else {
+                    return file_left;
+                }
+            }
+        } else if (messageModel.getMsg_text() != null && !messageModel.getMsg_text().isEmpty()) {
+            if (messageModel.getFrom_user().equals(current_user_id)) {
+                return msg_right;
+            } else {
+                return msg_left;
+            }
+        } else {
+            if (messageModel.getFrom_user().equals(current_user_id)) {
+                return msg_right;
+            } else {
+                return msg_left;
+            }
+        }
+
+    }
+
 }
