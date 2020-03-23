@@ -215,5 +215,9 @@
     <string name="download">تنزيل...</string>
     <string name="down_done">تم التنزيل</string>
     <string name="open">إختر</string>
+    <string name="category">الفئة</string>
+    <string name="to">إلى</string>
+    <string name="groups">المجموعات</string>
+    <string name="ch_group">إختر المجموعة لارسال رسالة</string>
 
 </resources>

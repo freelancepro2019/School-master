@@ -19,53 +19,84 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute"
         tools:replace="android:allowBackup">
-        <activity android:name=".ui.activities.activity_file.FileActivity"
+        <activity android:name=".ui.activities.activity_new_message.CreateNewMessageActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            tools:ignore="LockedOrientationActivity"
+
+            />
+        <activity
+            android:name=".ui.activities.activity_file.FileActivity"
             android:parentActivityName=".ui.activities.activity_chat.ChatActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+
             />
         <activity
             android:name=".ui.activities.activity_chat.ChatActivity"
             android:parentActivityName=".ui.activities.main.MainActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".ui.activities.code.CodeActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+            />
         <activity
             android:name=".ui.activities.changePassword.ChangePassword"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".ui.activities.editProfile.EditProfile"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".ui.activities.paymentReset.PaymentResetActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+            />
         <activity
             android:name=".ui.activities.login.LoginActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+            />
         <activity
             android:name=".ui.activities.base.BaseActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+
+            />
         <activity
             android:name=".ui.activities.main.MainActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/main_activity_title"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+            />
         <activity
             android:name=".ui.activities.contactUs.ContactUsActivity"
             android:label="@string/feedback_drawer"
             android:parentActivityName=".ui.activities.main.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+            />
         <activity
             android:name=".ui.activities.newsContent.NewsContentActivity"
             android:parentActivityName=".ui.activities.main.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+            />
         <activity
             android:name=".ui.activities.onBoarding.OnBoardingActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+            />
         <activity
             android:name=".ui.activities.splash.SplashActivity"
             android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
             android:theme="@style/splashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -75,60 +106,96 @@
         </activity>
         <activity
             android:name=".ui.activities.classSchedule.ClassScheduleActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            tools:ignore="LockedOrientationActivity"
+
+            />
         <activity
             android:name=".ui.activities.info.InfoActivity"
             android:label="@string/info_drawer"
             android:parentActivityName=".ui.activities.main.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+
+            />
         <activity
             android:name=".ui.activities.sons.SonsActivity"
             android:label="@string/sons_title"
             android:parentActivityName=".ui.activities.main.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+
+            />
         <activity
             android:name=".ui.activities.studentEvaluation.StudentEvaluationActivity"
             android:label="@string/students_evaluation"
             android:parentActivityName=".ui.activities.main.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+
+            />
         <activity
             android:name=".ui.activities.revisions.RevisionsActivity"
             android:label="@string/revisions"
             android:parentActivityName=".ui.activities.main.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+
+            />
         <activity
             android:name=".ui.activities.lessons.LessonsActivity"
             android:label="@string/lessons_preparation"
             android:parentActivityName=".ui.activities.main.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+
+            />
         <activity
             android:name=".ui.activities.weeklyPlan.WeeklyPlanActivity"
             android:label="@string/week_plan"
             android:parentActivityName=".ui.activities.main.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+
+            />
         <activity
             android:name=".ui.activities.askYourTeacher.AskYourTeacherActivity"
             android:label="@string/ask_your_teacher"
             android:parentActivityName=".ui.activities.main.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+
+            />
         <activity
             android:name=".ui.activities.accountBalance.AccountBalanceActivity"
             android:label="@string/account_statement"
             android:parentActivityName=".ui.activities.sons.SonsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+
+            />
         <activity
             android:name=".ui.activities.homework.HomeworkActivity"
             android:label="@string/homework"
             android:parentActivityName=".ui.activities.main.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+
+            />
         <activity
             android:name=".ui.activities.weekplanschedule.PlanScheduleActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            tools:ignore="LockedOrientationActivity"
+
+            />
         <activity
             android:name=".ui.activities.lessonPreparationTeacher.LessonPreparationsTeacher"
             android:label="@string/lessons_preparation"
             android:parentActivityName=".ui.activities.main.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+
+            />
 
         <service android:name=".service.ServiceDownload" />
 

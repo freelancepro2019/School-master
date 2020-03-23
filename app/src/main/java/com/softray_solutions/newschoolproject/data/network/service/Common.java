@@ -1,15 +1,23 @@
 package com.softray_solutions.newschoolproject.data.network.service;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.database.Cursor;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.widget.ProgressBar;
+
+import androidx.core.content.ContextCompat;
+
+import com.softray_solutions.newschoolproject.R;
 
 import java.io.File;
 
@@ -230,5 +238,17 @@ public class Common {
         return requestBody;
     }
 
+    public static ProgressDialog createProgressDialog(Context context, String msg) {
+        ProgressDialog dialog = new ProgressDialog(context);
+        dialog.setMessage(msg);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(false);
+        ProgressBar bar = new ProgressBar(context);
+        Drawable drawable = bar.getIndeterminateDrawable().mutate();
+        drawable.setColorFilter(ContextCompat.getColor(context, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        dialog.setIndeterminateDrawable(drawable);
+        return dialog;
+
+    }
 
 }

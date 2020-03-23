@@ -34,6 +34,7 @@ import com.softray_solutions.newschoolproject.model.RoomModel;
 import com.softray_solutions.newschoolproject.model.User;
 import com.softray_solutions.newschoolproject.model.UserTypeModel;
 import com.softray_solutions.newschoolproject.ui.activities.activity_chat.ChatActivity;
+import com.softray_solutions.newschoolproject.ui.activities.activity_new_message.CreateNewMessageActivity;
 import com.softray_solutions.newschoolproject.ui.activities.main.MainActivity;
 import com.squareup.picasso.Picasso;
 
@@ -88,6 +89,7 @@ public class MessagesFragment extends Fragment implements MessagesView{
         filterAdapter = new FilterAdapter(userTypeModelList,activity,this);
         binding.llFilter.setOnClickListener(view1 -> createFilterDialogAlert());
 
+
     }
 
     private void addUsersType() {
@@ -139,6 +141,10 @@ public class MessagesFragment extends Fragment implements MessagesView{
             lang = appPrefsHelper.getSelectedLanguage();
         }
 
+        binding.btnNewMessage.setOnClickListener(view -> {
+            Intent intent = new Intent(activity, CreateNewMessageActivity.class);
+            startActivityForResult(intent,200);
+        });
     }
 
     private void createFilterDialogAlert() {
@@ -222,6 +228,9 @@ public class MessagesFragment extends Fragment implements MessagesView{
 
 
             }
+        }else if (requestCode==200&&resultCode==Activity.RESULT_OK)
+        {
+            presenter.getRoomData(filter_by);
         }
     }
 

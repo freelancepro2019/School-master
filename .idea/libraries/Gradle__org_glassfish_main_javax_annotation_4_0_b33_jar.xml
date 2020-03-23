@@ -3,7 +3,9 @@
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.main/javax.annotation/4.0-b33/530a4418742e2c52e9a80eb35533cdaaa7db1262/javax.annotation-4.0-b33.jar!/" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.main/javax.annotation/4.0-b33/bb630ab628c2ebe87bf37be6fd33ec78ab6ebb4a/javax.annotation-4.0-b33-javadoc.jar!/" />
+    </JAVADOC>
     <SOURCES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.main/javax.annotation/4.0-b33/a9589503491620b85035416b7c7f96cb7351d885/javax.annotation-4.0-b33-sources.jar!/" />
     </SOURCES>

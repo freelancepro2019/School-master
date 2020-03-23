@@ -4,6 +4,7 @@ import com.softray_solutions.newschoolproject.model.AccountBalanceDataModel;
 import com.softray_solutions.newschoolproject.model.AddLessonPreparationSubject;
 import com.softray_solutions.newschoolproject.model.ArrayDataModel;
 import com.softray_solutions.newschoolproject.model.AskYourTeacher;
+import com.softray_solutions.newschoolproject.model.CategoryModel;
 import com.softray_solutions.newschoolproject.model.Homework;
 import com.softray_solutions.newschoolproject.model.Lesson;
 import com.softray_solutions.newschoolproject.model.LessonDetails;
@@ -32,12 +33,14 @@ import com.softray_solutions.newschoolproject.model.TeacherLibraryModel;
 import com.softray_solutions.newschoolproject.model.TeacherNotificationDataModel;
 import com.softray_solutions.newschoolproject.model.TeacherPlanClass;
 import com.softray_solutions.newschoolproject.model.User;
+import com.softray_solutions.newschoolproject.model.UserCategoryModel;
 import com.softray_solutions.newschoolproject.model.Week;
 
 import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -319,5 +322,46 @@ public interface MyInterface {
                                           @Field("chat_id") String chat_id
     );
 
+    @GET("chatting/Api/listCategory")
+    Call<List<CategoryModel>> getCategory(@Query("type") String type);
+
+
+    @FormUrlEncoded
+    @POST("chatting/Api/getUsers")
+    Call<List<UserCategoryModel>> getCategoryUsers(@Field("id") String user_id,
+                                                   @Field("school_id") String school_id,
+                                                   @Field("lang") String lang,
+                                                   @Field("category") String category
+    );
+
+
+    @Multipart
+    @POST("chatting/Api/sendMessage")
+    Call<ResponseBody> sendFirstText(@Part("user_id") RequestBody user_id,
+                                     @Part("school_id") RequestBody school_id,
+                                     @Part("to_user[]") List<RequestBody> toUsers,
+                                     @Part("category") RequestBody category,
+                                     @Part("msg_text") RequestBody msg_text
+
+    );
+
+    @Multipart
+    @POST("chatting/Api/sendMessage")
+    Call<ResponseBody> sendFirstFile(@Part("user_id") RequestBody user_id,
+                                     @Part("school_id") RequestBody school_id,
+                                     @Part("to_user[]") List<RequestBody> toUsers,
+                                     @Part("category") RequestBody category,
+                                     @Part MultipartBody.Part file
+    );
+
+    @Multipart
+    @POST("chatting/Api/sendMessage")
+    Call<ResponseBody> sendFirstTextFile(@Part("user_id") RequestBody user_id,
+                                         @Part("school_id") RequestBody school_id,
+                                         @Part("to_user[]") List<RequestBody> toUsers,
+                                         @Part("category") RequestBody category,
+                                         @Part("msg_text") RequestBody msg_text,
+                                         @Part MultipartBody.Part file
+    );
 
 }
