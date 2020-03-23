@@ -1,17 +1,21 @@
 package com.softray_solutions.newschoolproject.ui.activities.activity_file;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.softray_solutions.newschoolproject.R;
 import com.softray_solutions.newschoolproject.adapters.FileAdapter;
+import com.softray_solutions.newschoolproject.data.network.service.Common;
 import com.softray_solutions.newschoolproject.databinding.ActivityFileBinding;
 import com.softray_solutions.newschoolproject.model.FileModel;
 
@@ -47,6 +51,15 @@ public class FileActivity extends AppCompatActivity {
 
         binding.toolBar.setNavigationOnClickListener(view -> {
             finish();
+
+        });
+
+        binding.btnOpen.setOnClickListener(view -> {
+
+            String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setDataAndType(Uri.parse(path), "text/*");
+            startActivityForResult(intent, 100);
 
         });
     }
@@ -108,6 +121,42 @@ public class FileActivity extends AppCompatActivity {
         intent.putExtra("data", model);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
+            try {
+                Uri uri = data.getData();
+
+                if (uri != null) {
+                    String path = Common.getImagePath(this, uri);
+                    if (path != null && path.toLowerCase().endsWith(".pdf") || path.toLowerCase().endsWith(".doc") || path.toLowerCase().endsWith(".docx")) {
+
+                        File file = new File(path);
+                        FileModel model = new FileModel(file.getName(), "0", path);
+                        Intent intent = getIntent();
+                        intent.putExtra("data", model);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    } else {
+                        Toast.makeText(this, "Invalid file", Toast.LENGTH_SHORT).show();
+                    }
+
+                } else {
+                    Toast.makeText(this, "Invalid file", Toast.LENGTH_SHORT).show();
+
+                }
+
+
+            } catch (Exception e) {
+                Toast.makeText(this, "Invalid file", Toast.LENGTH_SHORT).show();
+
+            }
+
+        }
     }
 
     private class Task extends AsyncTask<Void, Void,Void> {

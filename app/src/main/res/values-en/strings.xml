@@ -213,4 +213,5 @@
     <string name="documents">Documents</string>
     <string name="download">Download...</string>
     <string name="down_done">Download done</string>
+    <string name="open">Open</string>
 </resources>

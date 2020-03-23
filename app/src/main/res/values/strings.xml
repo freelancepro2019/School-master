@@ -214,5 +214,6 @@
     <string name="documents">الملفات</string>
     <string name="download">تنزيل...</string>
     <string name="down_done">تم التنزيل</string>
+    <string name="open">إختر</string>
 
 </resources>

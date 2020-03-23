@@ -94,7 +94,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             HolderImageLeft holderImageLeft = (HolderImageLeft) holder;
             holderImageLeft.binding.setModel(model);
             holderImageLeft.binding.tvTime.setText(getTime(Long.parseLong(model.getCreated_at())));
-            Picasso.get().load(Uri.parse(base_url_image + model.getAttachment())).fit().into(holderImageLeft.binding.image);
+            Picasso.get().load(Uri.parse(base_url_image + model.getAttachment())).fit().into(holderImageLeft.binding.imageChat);
 
 
             holderImageLeft.itemView.setOnClickListener(view -> {
