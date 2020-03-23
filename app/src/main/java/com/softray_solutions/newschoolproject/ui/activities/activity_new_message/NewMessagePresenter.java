@@ -118,7 +118,7 @@ public class NewMessagePresenter {
     public void sendFirstMessage(String user_id,String school_id,String category,List<String> toUsers,String message,String file)
     {
         Log.e("message",message+"_att"+file);
-        /*if (!file.isEmpty()&&!message.isEmpty())
+        if (!file.isEmpty()&&!message.isEmpty())
         {
             sendFirstMessageFile(user_id,school_id,category,toUsers,message,file);
         }else if(!message.isEmpty())
@@ -128,7 +128,7 @@ public class NewMessagePresenter {
         {
             sendFirstFile(user_id,school_id,category,toUsers,file);
 
-        }*/
+        }
     }
 
     private void sendFirstFile(String user_id, String school_id, String category, List<String> toUsers, String file) {
