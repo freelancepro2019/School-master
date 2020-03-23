@@ -1,6 +1,8 @@
 package com.softray_solutions.newschoolproject.ui.activities.activity_chat;
 
 import android.Manifest;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -32,6 +34,7 @@ import com.softray_solutions.newschoolproject.model.FileModel;
 import com.softray_solutions.newschoolproject.model.MessageDataModel;
 import com.softray_solutions.newschoolproject.model.MessageModel;
 import com.softray_solutions.newschoolproject.model.User;
+import com.softray_solutions.newschoolproject.service.ServiceDownload;
 import com.softray_solutions.newschoolproject.ui.activities.activity_file.FileActivity;
 import com.squareup.picasso.Picasso;
 
@@ -45,7 +48,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     private ChatUserModel chatUserModel;
     private SharedPreferences preferences;
     private int read_req =100 ,read_req2= 300;
-    private int camera_req = 400;
+    private int camera_req = 400, write_req = 500;
     private String attachment ="";
     private User user;
     private String read_perm = Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -56,6 +59,8 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     private ChatPresenter presenter;
     private LinearLayoutManager manager;
     private boolean isNewMessage = false;
+    private String base_url_image = "";
+    private String file_to_download = "";
 
 
 
@@ -139,6 +144,9 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
         binding.btnSend.setOnClickListener(view -> {
             String message = binding.edtMessage.getText().toString().trim();
+            Log.e("at", attachment);
+            Log.e("msg", message);
+
             if (!message.isEmpty() || !attachment.isEmpty()) {
 
                 binding.cardView.setVisibility(View.GONE);
@@ -161,8 +169,6 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
 
     }
-
-
 
 
     private void navigateToFileActivity() {
@@ -198,6 +204,15 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
         } else {
             ActivityCompat.requestPermissions(this, new String[]{write_perm,camera_perm}, camera_req);
+        }
+    }
+
+    private void checkWritePermission() {
+        if (ContextCompat.checkSelfPermission(this, write_perm) == PackageManager.PERMISSION_GRANTED
+        ) {
+            startService();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{write_perm}, write_req);
         }
     }
 
@@ -245,15 +260,21 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
                     && grantResults[1] == PackageManager.PERMISSION_GRANTED
             ) {
-
+                selectImage(camera_req);
 
             } else {
                 Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
             }
-        }else if (requestCode==read_req2)
-        {
+        }else if (requestCode==read_req2) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                selectImage(read_req2);
+            } else {
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == write_req) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
+                startService();
             } else {
                 Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
             }
@@ -329,7 +350,9 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     @Override
     public void onMessagesSuccess(MessageDataModel messageDataModel) {
+        base_url_image = messageDataModel.getBase();
         if (adapter != null) {
+
             adapter.setBase_url_image(messageDataModel.getBase());
         }
         messageModelList.clear();
@@ -351,5 +374,39 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         intent.putExtra("refresh", isNewMessage);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    public void setItemFile(MessageModel model) {
+
+        file_to_download = model.getAttachment();
+        checkWritePermission();
+    }
+
+    private void startService() {
+        if (!isMyServiceRunning(ServiceDownload.class)) {
+            if (!base_url_image.isEmpty() && !file_to_download.isEmpty()) {
+                Toast.makeText(this, getString(R.string.download), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, ServiceDownload.class);
+                intent.putExtra("file_url", base_url_image + file_to_download);
+                intent.putExtra("file_name", file_to_download);
+                startService(intent);
+                file_to_download = "";
+            }
+        } else {
+            Toast.makeText(this, "Pending...", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

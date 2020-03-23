@@ -17,6 +17,7 @@ import com.softray_solutions.newschoolproject.databinding.ChatImageRightRowBindi
 import com.softray_solutions.newschoolproject.databinding.ChatMessageLeftRowBinding;
 import com.softray_solutions.newschoolproject.databinding.ChatMessageRightRowBinding;
 import com.softray_solutions.newschoolproject.model.MessageModel;
+import com.softray_solutions.newschoolproject.ui.activities.activity_chat.ChatActivity;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -38,6 +39,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private String chat_user_image;
     private LayoutInflater inflater;
     private String base_url_image = "";
+    private ChatActivity activity;
 
     public ChatAdapter(List<MessageModel> list, Context context, String current_user_id, String chat_user_image) {
         this.list = list;
@@ -45,6 +47,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.current_user_id = current_user_id;
         this.chat_user_image = chat_user_image;
         inflater = LayoutInflater.from(context);
+        activity = (ChatActivity) context;
     }
 
     @NonNull
@@ -93,11 +96,21 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holderImageLeft.binding.tvTime.setText(getTime(Long.parseLong(model.getCreated_at())));
             Picasso.get().load(Uri.parse(base_url_image + model.getAttachment())).fit().into(holderImageLeft.binding.image);
 
+
+            holderImageLeft.itemView.setOnClickListener(view -> {
+                MessageModel model1 = list.get(holderImageLeft.getAdapterPosition());
+                activity.setItemFile(model1);
+            });
         } else if (holder instanceof HolderImageRight) {
             HolderImageRight holderImageRight = (HolderImageRight) holder;
             holderImageRight.binding.setModel(model);
             holderImageRight.binding.tvTime.setText(getTime(Long.parseLong(model.getCreated_at())));
             Picasso.get().load(Uri.parse(base_url_image + model.getAttachment())).fit().into(holderImageRight.binding.image);
+
+            holderImageRight.itemView.setOnClickListener(view -> {
+                MessageModel model1 = list.get(holderImageRight.getAdapterPosition());
+                activity.setItemFile(model1);
+            });
 
         } else if (holder instanceof HolderFileLeft) {
             HolderFileLeft holderFileLeft = (HolderFileLeft) holder;
@@ -105,12 +118,22 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holderFileLeft.binding.setUrl(base_url_image);
             holderFileLeft.binding.tvTime.setText(getTime(Long.parseLong(model.getCreated_at())));
 
+            holderFileLeft.itemView.setOnClickListener(view -> {
+                MessageModel model1 = list.get(holderFileLeft.getAdapterPosition());
+                activity.setItemFile(model1);
+
+            });
         } else if (holder instanceof HolderFileRight) {
             HolderFileRight holderFileRight = (HolderFileRight) holder;
             holderFileRight.binding.setModel(model);
             holderFileRight.binding.setUrl(base_url_image);
             holderFileRight.binding.tvTime.setText(getTime(Long.parseLong(model.getCreated_at())));
 
+            holderFileRight.itemView.setOnClickListener(view -> {
+                MessageModel model1 = list.get(holderFileRight.getAdapterPosition());
+                activity.setItemFile(model1);
+
+            });
         }
     }
 

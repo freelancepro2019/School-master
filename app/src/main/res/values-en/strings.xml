@@ -211,4 +211,6 @@
     <string name="type_a_message">Type a message...</string>
     <string name="no_files">No Files</string>
     <string name="documents">Documents</string>
+    <string name="download">Download...</string>
+    <string name="down_done">Download done</string>
 </resources>

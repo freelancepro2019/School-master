@@ -129,6 +129,18 @@
             android:label="@string/lessons_preparation"
             android:parentActivityName=".ui.activities.main.MainActivity"
             android:screenOrientation="portrait" />
+
+        <service android:name=".service.ServiceDownload" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_path" />
+        </provider>
     </application>
 
 </manifest>

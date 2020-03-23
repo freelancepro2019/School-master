@@ -212,5 +212,7 @@
     <string name="type_a_message">إكتب الرسالة...</string>
     <string name="no_files">لا توجد ملفات</string>
     <string name="documents">الملفات</string>
+    <string name="download">تنزيل...</string>
+    <string name="down_done">تم التنزيل</string>
 
 </resources>
