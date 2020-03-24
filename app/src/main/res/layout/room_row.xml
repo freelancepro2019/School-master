@@ -81,7 +81,7 @@
             app:layout_goneMarginStart="0dp"
             app:layout_goneMarginEnd="0dp"
             android:maxEms="8"
-            android:text='@{model.msg_text!=null?model.msg_text:(!model.attachment.isEmpty()?@string/sent_attachment:"")}'
+            android:text='@{model.msg_text!=null?(!model.msg_text.isEmpty()?model.msg_text:(!model.attachment.isEmpty()?@string/sent_attachment:"")):(!model.attachment.isEmpty()?@string/sent_attachment:"")}'
 
             />
 

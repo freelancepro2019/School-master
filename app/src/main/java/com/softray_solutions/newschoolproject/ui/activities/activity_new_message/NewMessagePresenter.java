@@ -31,11 +31,13 @@ public class NewMessagePresenter {
 
     public void getCategoryByCurrentUserType(String type)
     {
+        listener.showProgress();
         MyInterface myInterface = Common.getMyInterface();
         myInterface.getCategory(type)
                 .enqueue(new Callback<List<CategoryModel>>() {
                     @Override
                     public void onResponse(Call<List<CategoryModel>> call, Response<List<CategoryModel>> response) {
+                        listener.hideProgress();
                         if (response.isSuccessful() && response.body() != null ) {
                             listener.onCategorySuccess(response.body());
                         } else {
@@ -117,7 +119,6 @@ public class NewMessagePresenter {
 
     public void sendFirstMessage(String user_id,String school_id,String category,List<String> toUsers,String message,String file)
     {
-        Log.e("message",message+"_att"+file);
         if (!file.isEmpty()&&!message.isEmpty())
         {
             sendFirstMessageFile(user_id,school_id,category,toUsers,message,file);
@@ -137,7 +138,7 @@ public class NewMessagePresenter {
         RequestBody school_id_part = Common.getRequestBodyText(school_id);
         RequestBody category_part = Common.getRequestBodyText(category);
         List<RequestBody> requestBodyList = getResponseBodyList(toUsers);
-        MultipartBody.Part file_part = Common.getMultiPartFile(context, file, "attachment");
+        MultipartBody.Part file_part = Common.getMultiPartFile(context, file, "fileUpload");
 
         listener.showProgress();
         MyInterface myInterface = Common.getMyInterface();
@@ -242,7 +243,7 @@ public class NewMessagePresenter {
         RequestBody category_part = Common.getRequestBodyText(category);
         RequestBody message_part = Common.getRequestBodyText(message);
         List<RequestBody> requestBodyList = getResponseBodyList(toUsers);
-        MultipartBody.Part file_part = Common.getMultiPartFile(context, file, "attachment");
+        MultipartBody.Part file_part = Common.getMultiPartFile(context, file, "fileUpload");
 
         listener.showProgress();
         MyInterface myInterface = Common.getMyInterface();
