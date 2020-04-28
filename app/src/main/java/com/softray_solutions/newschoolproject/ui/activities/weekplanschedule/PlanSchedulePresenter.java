@@ -3,6 +3,7 @@ package com.softray_solutions.newschoolproject.ui.activities.weekplanschedule;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 
 import com.softray_solutions.newschoolproject.Customization;
@@ -66,6 +67,7 @@ public class PlanSchedulePresenter {
 
     private void getTeacherPlanWeek(String userId, String week, String semester) {
 
+        Log.e("teche_id",userId+"__"+week+"_"+semester);
         myInterface.getPlanClass(userId, week, semester).enqueue(new Callback<ArrayDataModel<StudentDay<TeacherPlanClass>>>() {
             @Override
             public void onResponse(Call<ArrayDataModel<StudentDay<TeacherPlanClass>>> call, Response<ArrayDataModel<StudentDay<TeacherPlanClass>>> response) {
@@ -97,6 +99,7 @@ public class PlanSchedulePresenter {
     }
 
     private void getStudentPlanWeek(String userId, String week, String semester) {
+        Log.e("id",userId+"_"+week+"_"+semester);
         myInterface.studentPlanWeek(userId, week, semester).enqueue(new Callback<ArrayDataModel<StudentDay<StudentPlanClass>>>() {
             @Override
             public void onResponse(Call<ArrayDataModel<StudentDay<StudentPlanClass>>> call, Response<ArrayDataModel<StudentDay<StudentPlanClass>>> response) {
@@ -128,6 +131,10 @@ public class PlanSchedulePresenter {
     }
 
     private void getSonPlanWeek(String sonID, String week, String semester) {
+
+        Log.e("son_id",sonID+"_"+week+"_"+semester);
+
+
         myInterface.studentPlanWeek(sonID, week, semester).enqueue(new Callback<ArrayDataModel<StudentDay<StudentPlanClass>>>() {
             @Override
             public void onResponse(Call<ArrayDataModel<StudentDay<StudentPlanClass>>> call, Response<ArrayDataModel<StudentDay<StudentPlanClass>>> response) {

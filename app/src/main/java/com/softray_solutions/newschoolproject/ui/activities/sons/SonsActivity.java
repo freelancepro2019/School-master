@@ -112,6 +112,7 @@ public class SonsActivity extends BaseActivity implements SonsView {
 
     @Override
     public void StartClassSchedule(String Id) {
+
         Intent intent = new Intent(SonsActivity.this, ClassScheduleActivity.class);
         intent.putExtra("id", Id);
         startActivity(intent);

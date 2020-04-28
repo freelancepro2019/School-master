@@ -26,13 +26,6 @@
             app:titleTextAppearance="@style/TitleBarTextAppearance" />
 
     </com.google.android.material.appbar.AppBarLayout>
-
-    <FrameLayout
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav_view"
         android:layout_width="match_parent"
@@ -41,9 +34,18 @@
         android:theme="@style/Widget.BottomNavigationView"
         app:itemIconTint="@drawable/bottom_nav_selector"
         app:itemTextColor="@drawable/bottom_nav_selector"
-        app:menu="@menu/bottom_menu">
+        app:menu="@menu/bottom_menu"
+        app:elevation="0dp"
+        >
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
 
 
 </LinearLayout>

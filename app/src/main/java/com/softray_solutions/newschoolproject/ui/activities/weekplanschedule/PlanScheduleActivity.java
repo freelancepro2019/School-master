@@ -126,7 +126,40 @@ public class PlanScheduleActivity extends AppCompatActivity implements PlanSched
         try {
             setupTableHeader();
             for (int i = 0; i < data.size(); i++) {
-                switch (i) {
+
+                String day = data.get(i).getmDay();
+
+                if (day.toLowerCase().equals("sunday"))
+                {
+                    classes.add(new TeacherPlanClass(getString(R.string.sunday), true, null));
+
+                }
+
+                if (day.toLowerCase().equals("monday"))
+                {
+                    classes.add(new TeacherPlanClass(getString(R.string.monday), true, null));
+
+                }
+
+                if (day.toLowerCase().equals("tuesday"))
+                {
+                    classes.add(new TeacherPlanClass(getString(R.string.tuesday), true, null));
+
+                }
+
+                if (day.toLowerCase().equals("wednesday"))
+                {
+                    classes.add(new TeacherPlanClass(getString(R.string.wednesday), true, null));
+
+                }
+
+                if (day.toLowerCase().equals("thursday"))
+                {
+                    classes.add(new TeacherPlanClass(getString(R.string.thursday), true, null));
+
+                }
+
+                /*switch (i) {
                     case 0:
                         classes.add(new TeacherPlanClass(getString(R.string.sunday), true, null));
                         break;
@@ -142,7 +175,7 @@ public class PlanScheduleActivity extends AppCompatActivity implements PlanSched
                     case 4:
                         classes.add(new TeacherPlanClass(getString(R.string.thursday), true, null));
                         break;
-                }
+                }*/
                 classes.addAll(data.get(i).getmDayData());
             }
 
@@ -159,6 +192,42 @@ public class PlanScheduleActivity extends AppCompatActivity implements PlanSched
         try {
             setupStudentTableHeader();
             for (int i = 0; i < data.size(); i++) {
+
+
+                String day = data.get(i).getmDay();
+
+                if (day.toLowerCase().equals("sunday"))
+                {
+                    studentPlanClasses.add(new StudentPlanClass(getString(R.string.sunday), true, null));
+
+                }
+
+                if (day.toLowerCase().equals("monday"))
+                {
+                    studentPlanClasses.add(new StudentPlanClass(getString(R.string.monday), true, null));
+
+                }
+
+                if (day.toLowerCase().equals("tuesday"))
+                {
+                    studentPlanClasses.add(new StudentPlanClass(getString(R.string.tuesday), true, null));
+
+                }
+
+                if (day.toLowerCase().equals("wednesday"))
+                {
+                    studentPlanClasses.add(new StudentPlanClass(getString(R.string.wednesday), true, null));
+
+                }
+
+                if (day.toLowerCase().equals("thursday"))
+                {
+                    studentPlanClasses.add(new StudentPlanClass(getString(R.string.thursday), true, null));
+
+                }
+
+
+/*
                 switch (i) {
                     case 0:
                         studentPlanClasses.add(new StudentPlanClass(getString(R.string.sunday), true, null));
@@ -176,6 +245,7 @@ public class PlanScheduleActivity extends AppCompatActivity implements PlanSched
                         studentPlanClasses.add(new StudentPlanClass(getString(R.string.thursday), true, null));
                         break;
                 }
+*/
                 studentPlanClasses.addAll(data.get(i).getmDayData());
             }
 

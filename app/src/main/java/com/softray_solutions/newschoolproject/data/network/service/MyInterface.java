@@ -3,7 +3,7 @@ package com.softray_solutions.newschoolproject.data.network.service;
 import com.softray_solutions.newschoolproject.model.AccountBalanceDataModel;
 import com.softray_solutions.newschoolproject.model.AddLessonPreparationSubject;
 import com.softray_solutions.newschoolproject.model.ArrayDataModel;
-import com.softray_solutions.newschoolproject.model.AskYourTeacher;
+import com.softray_solutions.newschoolproject.model.AskTeacherDataModel;
 import com.softray_solutions.newschoolproject.model.CategoryModel;
 import com.softray_solutions.newschoolproject.model.Homework;
 import com.softray_solutions.newschoolproject.model.Lesson;
@@ -136,12 +136,22 @@ public interface MyInterface {
                                                                    @Field("RowLevelID") String rowLevelID,
                                                                    @Field("SchoolID") String schoolID);
 
-    @POST("android/emp_class/getAskTeacher")
+    /*@POST("android/emp_class/getAskTeacher")
     @FormUrlEncoded
     Call<ArrayDataModel<List<AskYourTeacher>>> askYourTeacher(@Field("teacherID") String teacherID,
                                                               @Field("SubjectID") String subjectID,
                                                               @Field("schoolID") String schoolID,
-                                                              @Field("rowlevelid") String rowLevelId);
+                                                              @Field("rowlevelid") String rowLevelId,
+                                                              @Field("type") String type
+                                                              );*/
+    @POST("android/emp_class/getAskTeacher")
+    @FormUrlEncoded
+    Call<AskTeacherDataModel> askYourTeacher(@Field("teacherID") String teacherID,
+                                             @Field("SubjectID") String subjectID,
+                                             @Field("schoolID") String schoolID,
+                                             @Field("rowlevelid") String rowLevelId,
+                                             @Field("type") String type
+    );
 
     @POST("android_student/student_supject/get_lesson_details")
     @FormUrlEncoded
@@ -237,17 +247,30 @@ public interface MyInterface {
     @FormUrlEncoded
     Call<ArrayDataModel<AddLessonPreparationSubject>> getSubjects(@Field("TeacherID") String teacherID, @Field("lang") String lang);
 
+
+
     @POST("android/emp_lesson/upload")
     @Multipart
     Call<ObjectDataModel<String>> uploadAttachment(@Part List<MultipartBody.Part> files);
 
+
+
+
+
     @POST("android/emp_lesson")
     @FormUrlEncoded
-    Call<ObjectDataModel<String>> uploadLesson(@Field("TeacherID") String teacherID, @Field("Select_subject") String selectedSubjectID
-            , @Field("SelectSkills") String selectedSkillID, @Field("lessonTitle") String lessonTitle
-            , @Field("DayDate") String dayDate, @Field("lessonStratigy") String lessonStrategy, @Field("txt_Aims1") String lessonGoals
-            , @Field("txt_Aids1") String lessonMeans, @Field("lessonIntro") String lessonPreface, @Field("txt_Reviews1") String lessonEvaluation
-            , @Field("trainhome") String lessonHomeworks, @Field("files") String filePath);
+    Call<ObjectDataModel<String>> uploadLesson(@Field("TeacherID") String teacherID,
+                                               @Field("Select_subject") String selectedSubjectID,
+                                               @Field("SelectSkills") String selectedSkillID,
+                                               @Field("lessonTitle") String lessonTitle,
+                                               @Field("DayDate") String dayDate,
+                                               @Field("lessonStratigy") String lessonStrategy,
+                                               @Field("txt_Aims1") String lessonGoals,
+                                               @Field("txt_Aids1") String lessonMeans,
+                                               @Field("lessonIntro") String lessonPreface,
+                                               @Field("txt_Reviews1") String lessonEvaluation,
+                                               @Field("trainhome") String lessonHomeworks,
+                                               @Field("files") String filePath);
 
     @POST("android/login/forgetPass")
     @FormUrlEncoded

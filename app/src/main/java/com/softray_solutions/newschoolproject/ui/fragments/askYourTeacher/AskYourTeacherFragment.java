@@ -1,7 +1,9 @@
 package com.softray_solutions.newschoolproject.ui.fragments.askYourTeacher;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +29,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class AskYourTeacherFragment extends Fragment implements AskYourTeacherFragmentView {
     Unbinder unbinder;
     @BindView(R.id.askYourTeacherCardsRecyclerView)
@@ -37,7 +41,7 @@ public class AskYourTeacherFragment extends Fragment implements AskYourTeacherFr
     TextView textView;
     String language, teacherID, subjectID, schoolID, rowLevelId;
     private AskYourTeacherFragmentPresenter presenter;
-
+    private SharedPreferences sharedPreferences;
     public AskYourTeacherFragment() {
     }
 
@@ -51,6 +55,7 @@ public class AskYourTeacherFragment extends Fragment implements AskYourTeacherFr
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        sharedPreferences = getActivity().getSharedPreferences("userData", MODE_PRIVATE);
         getLang();
         bindView(view);
         getArgs();
@@ -64,7 +69,7 @@ public class AskYourTeacherFragment extends Fragment implements AskYourTeacherFr
     }
 
     private void initPresenter() {
-        presenter = new AskYourTeacherFragmentPresenter(this, language);
+        presenter = new AskYourTeacherFragmentPresenter(this, language,sharedPreferences);
         presenter.askYourTeacher(teacherID, subjectID, schoolID, rowLevelId);
     }
 
@@ -122,9 +127,16 @@ public class AskYourTeacherFragment extends Fragment implements AskYourTeacherFr
 
     private void getArgs() {
         Bundle bundle = getArguments();
+
         teacherID = bundle.getString("userID");
         schoolID = bundle.getString("schoolID");
         rowLevelId = bundle.getString("rowLevelId");
         subjectID = bundle.getString("subjectId");
+
+        Log.e("teacher_id",teacherID);
+        Log.e("schoolID",schoolID);
+        Log.e("rowLevelId",rowLevelId);
+        Log.e("subjectID",subjectID);
+
     }
 }

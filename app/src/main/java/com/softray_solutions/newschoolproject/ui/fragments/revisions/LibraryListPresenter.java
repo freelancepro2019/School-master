@@ -1,6 +1,7 @@
 package com.softray_solutions.newschoolproject.ui.fragments.revisions;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -30,6 +31,11 @@ public class LibraryListPresenter {
 
     void getLibraryList(String studentID, String subjectID, String schoolID) {
         MyInterface myInterface = Common.getMyInterface();
+
+        Log.e("studentID",studentID);
+        Log.e("subjectID",subjectID);
+        Log.e("schoolID",schoolID);
+
         myInterface.getLibrary(studentID, subjectID, schoolID).enqueue(new Callback<ArrayDataModel<RevisionLibrary>>() {
             @Override
             public void onResponse(@NonNull Call<ArrayDataModel<RevisionLibrary>> call, @NonNull Response<ArrayDataModel<RevisionLibrary>> response) {
@@ -78,6 +84,10 @@ public class LibraryListPresenter {
     }
 
     void getTeacherLibraryList(String rowlevelID, String subjectID, String userID) {
+        Log.e("rowlevelID",rowlevelID);
+        Log.e("subjectID",subjectID);
+        Log.e("userID",userID);
+
         MyInterface myInterface = Common.getMyInterface();
         myInterface.getTeacherLibrary(rowlevelID, subjectID, userID, "1").enqueue(new Callback<ArrayDataModel<TeacherLibraryModel>>() {
             @Override

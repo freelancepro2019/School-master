@@ -1,6 +1,8 @@
 package com.softray_solutions.newschoolproject.adapters.lessonDetails;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.text.util.Linkify;
 import android.view.View;
 import android.widget.TextView;
@@ -42,5 +44,11 @@ public class LessonDetailsHolder extends RecyclerView.ViewHolder implements Less
 
     public void setContentAsAutolink() {
         contentText.setAutoLinkMask(Linkify.WEB_URLS);
+    }
+
+    public void startIntent(Uri uri)
+    {
+        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+        context.startActivity(intent);
     }
 }

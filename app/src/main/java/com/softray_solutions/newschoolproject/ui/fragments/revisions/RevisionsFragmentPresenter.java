@@ -47,6 +47,7 @@ class RevisionsFragmentPresenter {
 
         switch (tag) {
             case "RevisionsFragment":
+                Log.e("rev","rev");
                 view.setView(R.string.revision_button);
                 break;
             case "lessons":
@@ -92,16 +93,24 @@ class RevisionsFragmentPresenter {
 
             switch (tag) {
                 case "RevisionsFragment":
+                    Log.e("1","1");
                     fragment = new LibraryListFragment();
                     break;
                 case "lessons":
+                    Log.e("2","2");
+
                     Log.e("RevisionsFragment", user.toString());
                     fragment = new LessonsFragment();
                     break;
                 case "AskYourTeacher":
+                    Log.e("3","3");
+
                     fragment = new AskYourTeacherFragment();
                     break;
                 default:
+                    Log.e("4","4");
+
+
                     fragment = new LibraryListFragment();
             }
         }
@@ -138,6 +147,9 @@ class RevisionsFragmentPresenter {
 
 
     void getStudentSubjects(String studentId, String schoolId) {
+        Log.e("st_id",studentId+"_");
+        Log.e("sc_id",schoolId+"_");
+
         this.studentId = studentId;
         myInterface = Common.getMyInterface();
         myInterface.getRevisions(schoolId, studentId).enqueue(new Callback<ArrayDataModel<Subject>>() {

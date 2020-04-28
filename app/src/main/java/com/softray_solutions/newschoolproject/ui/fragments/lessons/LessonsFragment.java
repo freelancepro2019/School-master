@@ -62,6 +62,7 @@ public class LessonsFragment extends Fragment implements LessonsView {
         userID = bundle.getString("userIDForLessons");
         schoolID = bundle.getString("schoolID");
         classID = bundle.getString("classID");
+
     }
 
     @Override

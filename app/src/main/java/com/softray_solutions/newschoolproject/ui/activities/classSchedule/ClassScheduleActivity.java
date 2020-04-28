@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -117,10 +118,57 @@ public class ClassScheduleActivity extends AppCompatActivity implements ClassSch
 
     @Override
     public void setClasses(List<StudentDay<StudentClass>> data) {
+
+        Log.e("size",data.size()+"_");
+        for (StudentClass aClass :data.get(0).getmDayData())
+        {
+            Log.e("data",data.get(0).getmDay()+"___"+aClass.getObject()+"_");
+        }
+        Log.e("ssss",data.get(0).getmDayData().size()+"");
+
         try {
             setupTableHeader();
             for (int i = 0; i < data.size(); i++) {
-                switch (i) {
+
+                String day = data.get(i).getmDay();
+
+                if (day.toLowerCase().equals("sunday"))
+                {
+                    classes.add(new StudentClass(getString(R.string.sunday), null));
+
+                }
+
+                if (day.toLowerCase().equals("monday"))
+                {
+                    classes.add(new StudentClass(getString(R.string.monday), null));
+
+                }
+
+                if (day.toLowerCase().equals("tuesday"))
+                {
+                    classes.add(new StudentClass(getString(R.string.tuesday), null));
+
+                }
+
+                if (day.toLowerCase().equals("wednesday"))
+                {
+                    classes.add(new StudentClass(getString(R.string.wednesday), null));
+
+                }
+
+
+
+                if (day.toLowerCase().equals("thursday"))
+                {
+                    classes.add(new StudentClass(getString(R.string.thursday), null));
+
+                }
+
+
+
+
+
+                /*switch (i) {
                     case 0:
                         classes.add(new StudentClass(getString(R.string.sunday), null));
                         break;
@@ -136,8 +184,10 @@ public class ClassScheduleActivity extends AppCompatActivity implements ClassSch
                     case 4:
                         classes.add(new StudentClass(getString(R.string.thursday), null));
                         break;
-                }
+                }*/
+
                 classes.addAll(data.get(i).getmDayData());
+
             }
             TimeTableAdapter adapter = new TimeTableAdapter(classes, presenter);
 

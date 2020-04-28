@@ -1,6 +1,8 @@
 package com.softray_solutions.newschoolproject.ui.fragments.lessonDetails;
 
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.view.View;
 
 import com.softray_solutions.newschoolproject.Customization;
 import com.softray_solutions.newschoolproject.R;
@@ -13,6 +15,7 @@ import com.softray_solutions.newschoolproject.model.LessonDetails;
 import com.softray_solutions.newschoolproject.model.ObjectDataModel;
 import com.softray_solutions.newschoolproject.model.User;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,14 +69,17 @@ public class LessonDetailsPresenter {
                 StringBuilder attachmentString = new StringBuilder();
                 for (String attachment :
                         lesson.getFileAttachmentString()) {
-                    if (attachmentString.length() == 0) {
+
+                    lessonList.add(new LessonContent(R.string.attachs,attachment));
+
+                    /*if (attachmentString.length() == 0) {
                         attachmentString = new StringBuilder(attachment);
 
                     } else {
                         attachmentString.append("\n\n\n").append(attachment);
-                    }
+                    }*/
                 }
-                lessonList.add(new LessonContent(R.string.attachs, attachmentString.toString()));
+                //lessonList.add(new LessonContent(R.string.attachs, attachmentString.toString()));
 
             }
         } else {
@@ -102,14 +108,17 @@ public class LessonDetailsPresenter {
                 StringBuilder attachmentString = new StringBuilder();
                 for (String attachment :
                         lesson.getFileAttachmentString()) {
-                    if (attachmentString.length() == 0) {
+
+                    lessonList.add(new LessonContent(R.string.attachs,attachment));
+
+                    /*if (attachmentString.length() == 0) {
                         attachmentString = new StringBuilder(attachment);
 
                     } else {
                         attachmentString.append("\n\n\n").append(attachment);
-                    }
+                    }*/
                 }
-                lessonList.add(new LessonContent(R.string.attachs, attachmentString.toString()));
+                //lessonList.add(new LessonContent(R.string.attachs, attachmentString.toString()));
 
             }
 
@@ -123,11 +132,24 @@ public class LessonDetailsPresenter {
     public void onBindItem(LessonDetailsHolder holder, int position) {
         LessonContent lessonContent = lessonList.get(position);
         holder.setTitle(lessonContent.getTitle());
-        if (holder.getTitleText().getText().toString().equals("المرفقات")
-                || holder.getTitleText().getText().toString().equals("Attachment")) {
-            holder.setContentAsAutolink();
-        }
-        holder.setContent(lessonContent.getContent());
+        /*if (holder.getTitleText().getText().toString().equals("المرفقات") || holder.getTitleText().getText().toString().equals("Attachment")) {
+           // holder.setContentAsAutolink();
+
+
+        }*/
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Uri uri = Uri.parse(lessonContent.getContent());
+                holder.startIntent(uri);
+            }
+        });
+        File file = new File(lessonContent.getContent());
+        holder.setContent(file.getName());
+
+        //holder.setContent(lessonContent.getContent());
     }
 
     public int getItemsCount() {

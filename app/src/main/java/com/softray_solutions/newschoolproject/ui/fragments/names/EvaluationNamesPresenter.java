@@ -3,6 +3,7 @@ package com.softray_solutions.newschoolproject.ui.fragments.names;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 
@@ -45,6 +46,10 @@ public class EvaluationNamesPresenter {
     }
 
     void getStudentClass(String classID, String rowLevelID) {
+        Log.e("classID",classID);
+        Log.e("rowLevelID",rowLevelID);
+        Log.e("schoolID",schoolID);
+
         namesView.showPregress();
         MyInterface myInterface = Common.getMyInterface();
         myInterface.getStudentsClass(classID, rowLevelID, schoolID).enqueue(new Callback<ObjectDataModel<StudentEvaluationNames>>() {

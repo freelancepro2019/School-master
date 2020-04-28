@@ -1,6 +1,7 @@
 package com.softray_solutions.newschoolproject.ui.fragments.lessons;
 
 
+import android.util.Log;
 import android.view.View;
 
 import com.softray_solutions.newschoolproject.adapters.lessons.LessonsAdapter;
@@ -40,6 +41,11 @@ public class LessonsPresenter {
     }
 
     private void getTeacherLessons(String rowLevelID, String subjectID, String userID, String classID, String schoolID) {
+
+        Log.e("rowLevelID_EM",rowLevelID);
+        Log.e("subjectID_EM",subjectID);
+        Log.e("schoolID_EM",schoolID+"___");
+        Log.e("classID_EM",classID+"___");
         MyInterface myInterface = Common.getMyInterface();
         myInterface.getTeacherLessons(rowLevelID, subjectID, userID, classID, schoolID).enqueue(new Callback<ArrayDataModel<Lesson>>() {
             @Override
@@ -71,6 +77,13 @@ public class LessonsPresenter {
 
     private void getStudentLessons(String rowLevelID, String subjectID, String schoolID, String classID) {
         MyInterface myInterface = Common.getMyInterface();
+
+        Log.e("rowLevelID_ST",rowLevelID);
+        Log.e("subjectID_ST",subjectID);
+        Log.e("schoolID_ST",schoolID+"___");
+        Log.e("classID_ST",classID+"___");
+
+
         myInterface.getLessons(rowLevelID, subjectID, schoolID, classID).enqueue(new Callback<ArrayDataModel<Lesson>>() {
             @Override
             public void onResponse(Call<ArrayDataModel<Lesson>> call, Response<ArrayDataModel<Lesson>> response) {

@@ -3,6 +3,7 @@ package com.softray_solutions.newschoolproject.ui.activities.classSchedule;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -40,6 +41,7 @@ public class ClassSchedulePresenter {
     }
 
     private void getStudentClasses(String id) {
+        Log.e("id",id);
         MyInterface myInterface = Common.getMyInterface();
         myInterface.getSchedule(id).enqueue(new Callback<ArrayDataModel<StudentDay<StudentClass>>>() {
             @Override
