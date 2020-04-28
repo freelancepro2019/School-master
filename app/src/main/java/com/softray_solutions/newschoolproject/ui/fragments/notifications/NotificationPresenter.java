@@ -2,6 +2,7 @@ package com.softray_solutions.newschoolproject.ui.fragments.notifications;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.softray_solutions.newschoolproject.adapters.ParentNotificationAdapter;
@@ -132,10 +133,18 @@ public class NotificationPresenter {
         teacherId = user.getId();
         SchoolId = user.getSchoolID();
         myInterface = Common.getMyInterface();
+
+        Log.e("teacherId",teacherId);
+        Log.e("SchoolId",SchoolId);
+
+
         myInterface.getTeacherNotification(teacherId, SchoolId).enqueue(new Callback<ArrayDataModel<TeacherNotificationDataModel>>() {
             @Override
             public void onResponse(Call<ArrayDataModel<TeacherNotificationDataModel>> call, Response<ArrayDataModel<TeacherNotificationDataModel>> response) {
                 notificationsView.hideProgressBar();
+
+                Log.e("data","code"+response.code()+"____"+response.body().getData().size()+"__");
+
                 if (response.body() != null) {
                     if (response.body().getSuccess() == 1) {
                         if (!response.body().getData().isEmpty()) {

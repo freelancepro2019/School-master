@@ -162,10 +162,7 @@ public interface MyInterface {
     Call<ArrayDataModel<TeacherNotificationDataModel>> getTeacherNotification(@Field("teacherID") String teacherID,
                                                                               @Field("schoolID") String schoolId);
 
-    @POST("android/emp_class/update_notification")
-    @FormUrlEncoded
-    Call<ObjectDataModel> updateNotification(@Field("teacherID") String teacherID,
-                                             @Field("NotificationID") String notificationID);
+
 
     @POST("android_student/student_supject/get_student_notification")
     @FormUrlEncoded
@@ -176,6 +173,13 @@ public interface MyInterface {
     @FormUrlEncoded
     Call<ArrayDataModel<ParentNotificationDataModel>> getParentNotifications(@Field("fatherID") String fatherID,
                                                                              @Field("SchoolID") String schoolID);
+
+
+    @POST("android/emp_class/update_notification")
+    @FormUrlEncoded
+    Call<ObjectDataModel> updateNotification(@Field("teacherID") String teacherID,
+                                             @Field("NotificationID") String notificationID);
+
 
     @POST("android_student/clerical_homework/index")
     @FormUrlEncoded

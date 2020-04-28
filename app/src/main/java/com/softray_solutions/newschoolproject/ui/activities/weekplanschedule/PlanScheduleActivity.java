@@ -159,6 +159,8 @@ public class PlanScheduleActivity extends AppCompatActivity implements PlanSched
 
                 }
 
+
+
                 /*switch (i) {
                     case 0:
                         classes.add(new TeacherPlanClass(getString(R.string.sunday), true, null));
@@ -179,8 +181,10 @@ public class PlanScheduleActivity extends AppCompatActivity implements PlanSched
                 classes.addAll(data.get(i).getmDayData());
             }
 
-            PlanAdapter adapter = new PlanAdapter(classes, presenter);
 
+
+
+            PlanAdapter adapter = new PlanAdapter(classes, presenter);
             setupRecyclerView(adapter);
         } catch (NullPointerException e) {
             e.printStackTrace();

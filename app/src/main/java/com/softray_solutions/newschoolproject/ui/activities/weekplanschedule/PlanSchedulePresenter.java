@@ -78,6 +78,14 @@ public class PlanSchedulePresenter {
                             view.hideEmptyView();
                             view.showRecycler();
                             view.setClasses(response.body().getData());
+                            for (StudentDay<TeacherPlanClass> d :response.body().getData())
+                            {
+                                for (TeacherPlanClass aClass:d.getmDayData())
+                                {
+                                    Log.e("ttttclass",aClass.getmObject());
+                                }
+                            }
+
                         } else {
                             view.hideRecycler();
                             view.showEmptyView();
