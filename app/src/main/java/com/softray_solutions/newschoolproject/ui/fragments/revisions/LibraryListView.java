@@ -18,5 +18,5 @@ public interface LibraryListView {
 
     void startRevisionLibraryInfoFragment(Bundle bundle);
 
-    void setTeacherData(List<TeacherLibraryModel> teacherLibraryModelList);
+    void setTeacherData(List<TeacherLibraryModel> Data);
 }

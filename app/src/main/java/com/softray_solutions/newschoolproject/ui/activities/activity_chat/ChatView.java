@@ -12,4 +12,5 @@ public interface ChatView {
 
     void onError(String msg);
 
+
 }

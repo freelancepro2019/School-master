@@ -162,9 +162,9 @@ public class MainActivity extends BaseActivity implements MainView {
             case "main":
                 currentItemID = R.id.bottom_nav_home;
                 break;
-            case "notifications":
+           /* case "notifications":
                 currentItemID = R.id.bottom_nav_notifications;
-                break;
+                break;*/
             case "tools":
                 currentItemID = R.id.bottom_nav_tools;
                 break;

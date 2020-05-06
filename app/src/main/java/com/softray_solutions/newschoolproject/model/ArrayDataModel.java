@@ -9,7 +9,7 @@ public class ArrayDataModel<T> {
     private String message = "";
     private int success = 0;
 
-    @SerializedName(value = "user_data", alternate = {"homework_data"})
+    @SerializedName(value = "user_data", alternate = {"homework_data","data"})
     private List<T> data;
 
     public String getMessage() {

@@ -274,7 +274,10 @@ public interface MyInterface {
                                                @Field("lessonIntro") String lessonPreface,
                                                @Field("txt_Reviews1") String lessonEvaluation,
                                                @Field("trainhome") String lessonHomeworks,
-                                               @Field("files") String filePath);
+                                               @Field("files") String filePath,
+                                               @Field("Scripts") String Scripts
+
+                                               );
 
     @POST("android/login/forgetPass")
     @FormUrlEncoded

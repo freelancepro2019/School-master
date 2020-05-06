@@ -51,10 +51,10 @@ public class AskYourTeacherFragmentPresenter {
         String type = "";
         if (user.getType().equals("S"))
         {
-            type = "student";
+            type = "S";
         }else if (user.getType().equals("E"))
         {
-            type = "teacher";
+            type = "E";
 
         }
         MyInterface myInterface = Common.getMyInterface();

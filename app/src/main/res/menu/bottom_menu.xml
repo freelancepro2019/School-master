@@ -4,10 +4,10 @@
         android:id="@+id/bottom_nav_home"
         android:icon="@drawable/ic_bottom_home"
         android:title="@string/bottom_nav_text_home" />
-    <item
+   <!-- <item
         android:id="@+id/bottom_nav_notifications"
         android:icon="@drawable/ic_notification"
-        android:title="@string/notifications" />
+        android:title="@string/notifications" />-->
     <item
         android:id="@+id/bottom_nav_tools"
         android:icon="@drawable/ic_bottom_tools"

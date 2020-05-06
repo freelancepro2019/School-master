@@ -39,6 +39,7 @@ public class LibraryListFragment extends Fragment implements LibraryListView {
     TextView emptyTextView;
     Unbinder unbinder;
     LibraryListPresenter presenter;
+
     String schoolID, subjectID, userID, language, rowlevelID, userType;
     LibraryAdapter adapter;
     TeacherLibraryAdapter teacherAdapter;
@@ -112,6 +113,7 @@ public class LibraryListFragment extends Fragment implements LibraryListView {
 
         }
     }
+
 
     @Override
     public void setError(String error) {

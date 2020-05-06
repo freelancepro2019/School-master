@@ -120,7 +120,7 @@ class AddLessonPreparationPresenter {
     }
 
     void uploadFile(Context context, final List<File> fileList, final String lessonTitle, final String dayDate, final String lessonStrategy, final String lessonGoals,
-                    final String lessonMeans, final String lessonPreface, final String lessonEvaluation, final String lessonHomeworks) {
+                    final String lessonMeans, final String lessonPreface, final String lessonEvaluation, final String lessonHomeworks,final String Scripts) {
         view.showDialog();
         RequestBody requestBody;
         MultipartBody.Part part;
@@ -139,7 +139,7 @@ class AddLessonPreparationPresenter {
                     filePath = response.body().getData();
 
                     uploadLesson(lessonTitle, dayDate, lessonStrategy, lessonGoals, lessonMeans
-                            , lessonPreface, lessonEvaluation, lessonHomeworks);
+                            , lessonPreface, lessonEvaluation, lessonHomeworks,Scripts);
                 } else {
                     view.showToast("Upload failed, try again later.");
                 }
@@ -164,11 +164,11 @@ class AddLessonPreparationPresenter {
     }
 
     void uploadLesson(String lessonTitle, String dayDate, String lessonStrategy, String lessonGoals,
-                      String lessonMeans, String lessonPreface, String lessonEvaluation, String lessonHomeworks) {
+                      String lessonMeans, String lessonPreface, String lessonEvaluation, String lessonHomeworks,String Scripts) {
         view.showDialog();
         MyInterface myInterface = Common.getMyInterface();
         myInterface.uploadLesson(teacherID, selectedSubjectID, selectedSkillID, lessonTitle, dayDate, lessonStrategy, lessonGoals
-                , lessonMeans, lessonPreface, lessonEvaluation, lessonHomeworks, filePath).enqueue(new Callback<ObjectDataModel<String>>() {
+                , lessonMeans, lessonPreface, lessonEvaluation, lessonHomeworks, filePath,Scripts).enqueue(new Callback<ObjectDataModel<String>>() {
             @Override
             public void onResponse(Call<ObjectDataModel<String>> call, Response<ObjectDataModel<String>> response) {
                 view.dismissDialog();

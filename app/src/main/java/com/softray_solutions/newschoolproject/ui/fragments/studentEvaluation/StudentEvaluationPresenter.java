@@ -3,6 +3,8 @@ package com.softray_solutions.newschoolproject.ui.fragments.studentEvaluation;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.softray_solutions.newschoolproject.R;
@@ -94,6 +96,10 @@ class StudentEvaluationPresenter {
     void getSubjects(int position) {
         selectedSemester = semesters.get(position);
 
+        Log.e("teacherid",userID);
+        Log.e("rowlevel",selectedSemester.getRowLevelID());
+        Log.e("classid",selectedSemester.getClassID());
+
         myInterface.getSubjects(userID, selectedSemester.getRowLevelID(), selectedSemester.getClassID()).enqueue(new Callback<ArrayDataModel<Subject>>() {
             @Override
             public void onResponse(Call<ArrayDataModel<Subject>> call, Response<ArrayDataModel<Subject>> response) {
@@ -102,14 +108,14 @@ class StudentEvaluationPresenter {
                         subjects = response.body().getData();
                         view.setSubjects(subjects);
                     } else {
-                        view.setError(response.body().getMessage());
+                        Toast.makeText(context, R.string.no_subject, Toast.LENGTH_SHORT).show();
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<ArrayDataModel<Subject>> call, Throwable t) {
-                view.setError(t.getLocalizedMessage());
+                Toast.makeText(context, R.string.no_subject, Toast.LENGTH_SHORT).show();
             }
         });
     }

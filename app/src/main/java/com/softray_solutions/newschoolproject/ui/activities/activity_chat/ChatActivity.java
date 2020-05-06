@@ -2,18 +2,25 @@ package com.softray_solutions.newschoolproject.ui.activities.activity_chat;
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -40,8 +47,16 @@ import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ChatActivity extends AppCompatActivity implements ChatView {
     private ActivityChatBinding binding;
@@ -61,7 +76,15 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     private boolean isNewMessage = false;
     private String base_url_image = "";
     private String file_to_download = "";
-
+    private boolean isPermissionGranted = false;
+    private MediaRecorder recorder;
+    private SeekBar seekBar;
+    private String path;
+    private MediaPlayer mediaPlayer;
+    private Handler handler;
+    private Runnable runnable;
+    private final String audio_perm = Manifest.permission.RECORD_AUDIO;
+    private final String write_permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 
     @Override
@@ -141,6 +164,44 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             checkCameraPermission();
 
         } );
+        binding.imageMic.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (isPermissionGranted) {
+                        if (recorder != null) {
+                            recorder.release();
+                            recorder = null;
+
+                        }
+                        initRecorder();
+
+                    } else {
+                        Toast.makeText(ChatActivity.this, "Cannot access mic", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    if (isPermissionGranted) {
+
+                        try {
+                            recorder.stop();
+                            //  Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
+                            mediaPlayer = null;
+                            initAudio();
+
+                        } catch (Exception e) {
+                            // binding.imageWave.setVisibility(View.GONE);
+                        }
+
+
+                    } else {
+                        Toast.makeText(ChatActivity.this, "Cannot access mic", Toast.LENGTH_SHORT).show();
+                    }
+
+
+                }
+                return true;
+            }
+        });
 
         binding.btnSend.setOnClickListener(view -> {
             String message = binding.edtMessage.getText().toString().trim();
@@ -400,6 +461,136 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     }
 
 
+    private void deleteFile() {
+        File file = new File(path);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+    private void setdata() {
+        binding.cardView.setVisibility(View.GONE);
+        deleteFile();
+
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+
+        if (handler != null && runnable != null) {
+            handler.removeCallbacks(runnable);
+            runnable = null;
+        }
+    }
+
+  /*  private void checkWritePermission() {
+
+        if (ContextCompat.checkSelfPermission(this, audio_perm) != PackageManager.PERMISSION_GRANTED) {
+
+
+            isPermissionGranted = false;
+
+            ActivityCompat.requestPermissions(this, new String[]{write_permission, audio_perm}, write_req);
+
+
+        } else {
+            isPermissionGranted = true;
+        }
+    }*/
+
+    private void initAudio() {
+        try {
+
+
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setDataSource(path);
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setVolume(100.0f, 100.0f);
+            mediaPlayer.setLooping(false);
+            mediaPlayer.prepare();
+           // binding.recordDuration.setText(getDuration(mediaPlayer.getDuration()));
+
+            mediaPlayer.setOnPreparedListener(mediaPlayer -> {
+                binding.cardView2.setVisibility(View.VISIBLE);
+                seekBar.setMax(mediaPlayer.getDuration());
+                binding.imagePlay.setImageResource(R.drawable.ic_play);
+            });
+
+            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+               // binding.recordDuration.setText(getDuration(mediaPlayer.getDuration()));
+                binding.imagePlay.setImageResource(R.drawable.ic_play);
+                seekBar.setProgress(0);
+                handler.removeCallbacks(runnable);
+
+            });
+            binding.images.setVisibility(View.GONE);
+
+
+        } catch (IOException e) {
+            Log.e("eeeex", e.getMessage());
+            mediaPlayer.release();
+            mediaPlayer = null;
+            if (handler != null && runnable != null) {
+                handler.removeCallbacks(runnable);
+            }
+            binding.cardView2.setVisibility(View.GONE);
+
+        }
+    }
+
+    private void updateProgress() {
+        seekBar.setProgress(mediaPlayer.getCurrentPosition());
+       // binding.recordDuration.setText(getDuration(mediaPlayer.getCurrentPosition()));
+        handler = new Handler();
+        runnable = this::updateProgress;
+        handler.postDelayed(runnable, 1000);
+
+
+    }
+
+
+
+    private void initRecorder() {
+        binding.images.setVisibility(View.VISIBLE);
+        Calendar calendar = Calendar.getInstance();
+        isPermissionGranted = true;
+        String audioName = "AUD" + calendar.getTimeInMillis() + ".mp3";
+
+        File folder_done = new File("Tags.local_folder_path");
+
+        if (!folder_done.exists()) {
+            folder_done.mkdir();
+        }
+
+        path = folder_done.getAbsolutePath() + "/" + audioName;
+
+
+        recorder = new MediaRecorder();
+
+
+        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        recorder.setAudioChannels(1);
+        recorder.setOutputFile(path);
+        try {
+            recorder.prepare();
+            recorder.start();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("Failed", "Failed");
+
+
+            if (mediaPlayer != null) {
+                mediaPlayer.release();
+                mediaPlayer = null;
+            }
+
+
+        }
+
+    }
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {

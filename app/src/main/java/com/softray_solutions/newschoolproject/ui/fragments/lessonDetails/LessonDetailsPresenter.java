@@ -2,6 +2,7 @@ package com.softray_solutions.newschoolproject.ui.fragments.lessonDetails;
 
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 
 import com.softray_solutions.newschoolproject.Customization;
@@ -36,6 +37,7 @@ public class LessonDetailsPresenter {
 
     void getLessonDetails(String lessonToken) {
         MyInterface myInterface = Common.getMyInterface();
+        Log.e("tokeb",lessonToken);
         myInterface.getLesson(lessonToken).enqueue(new Callback<ObjectDataModel<LessonDetails>>() {
             @Override
             public void onResponse(Call<ObjectDataModel<LessonDetails>> call, Response<ObjectDataModel<LessonDetails>> response) {
@@ -65,6 +67,8 @@ public class LessonDetailsPresenter {
             if (!lesson.getTrainhome().isEmpty())
                 lessonList.add(new LessonContent(R.string.train_home, lesson.getTrainhome()));
 
+            if (!lesson.getScripts().isEmpty())
+                lessonList.add(new LessonContent(R.string.scripts, lesson.getScripts()));
             if (!lesson.getAttachs().isEmpty()) {
                 StringBuilder attachmentString = new StringBuilder();
                 for (String attachment :

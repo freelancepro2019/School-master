@@ -26,7 +26,6 @@ public class TeacherLibraryAdapter extends RecyclerView.Adapter<TeacherLibraryAd
         this.dataSet = dataSet;
         this.presenter = presenter;
     }
-
     @NonNull
     @Override
     public MainViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {

@@ -25,7 +25,6 @@ public class TeacherScheduleAdapter extends RecyclerView.Adapter<TeacherSchedule
         this.data = data;
         this.presenter = presenter;
     }
-
     @NonNull
     @Override
     public MainViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

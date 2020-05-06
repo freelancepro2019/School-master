@@ -14,6 +14,7 @@ import com.softray_solutions.newschoolproject.model.ArrayDataModel;
 import com.softray_solutions.newschoolproject.model.RevisionLibrary;
 import com.softray_solutions.newschoolproject.model.TeacherLibraryModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -22,12 +23,14 @@ import retrofit2.Response;
 
 public class LibraryListPresenter {
     private LibraryListView libraryListView;
+
     private String language;
 
     LibraryListPresenter(LibraryListView view, String language) {
         this.libraryListView = view;
         this.language = language;
     }
+
 
     void getLibraryList(String studentID, String subjectID, String schoolID) {
         MyInterface myInterface = Common.getMyInterface();
@@ -84,10 +87,52 @@ public class LibraryListPresenter {
     }
 
     void getTeacherLibraryList(String rowlevelID, String subjectID, String userID) {
+
+     /*   MyInterface myInterface = Common.getMyInterface();
+
+
+
+        myInterface.getTeacherLibrary(rowlevelID,subjectID,userID,"1").enqueue(new Callback<ArrayDataModel<TeacherLibraryModel>>() {
+            @Override
+            public void onResponse(@NonNull Call<ArrayDataModel<TeacherLibraryModel>> call, @NonNull Response<ArrayDataModel<TeacherLibraryModel>> response) {
+                libraryListView.hideProgressBar();
+
+                if (response.body() != null) {
+                    if (response.body().getSuccess() == 1) {
+                    *//*    Log.e("mmmmm",response.body().getSuccess()+"0000");
+                    Log.e("mmmmm",response.body().getData().get(0).getID());
+*//*
+                        // if (response.body().getData().size() > 0) {
+                           try {
+                               libraryListView.setTeacherData(response.body().getData());
+
+                           }catch (Exception e){
+                               libraryListView.onEmptyList();
+                               Log.e("ggggg",response.body().getSuccess()+"0000");
+
+                           }
+                     //   } else {
+                          //  libraryListView.onEmptyList();
+                      //  }
+                    } else {
+                        libraryListView.setError("Error");
+                    }
+                } else {
+                    libraryListView.setError("null response");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ArrayDataModel<TeacherLibraryModel>> call, @NonNull Throwable t) {
+              libraryListView.hideProgressBar();
+                libraryListView.setError(t.getLocalizedMessage());
+            }
+        });
+
         Log.e("rowlevelID",rowlevelID);
         Log.e("subjectID",subjectID);
         Log.e("userID",userID);
-
+*/
         MyInterface myInterface = Common.getMyInterface();
         myInterface.getTeacherLibrary(rowlevelID, subjectID, userID, "1").enqueue(new Callback<ArrayDataModel<TeacherLibraryModel>>() {
             @Override
@@ -95,11 +140,17 @@ public class LibraryListPresenter {
                 libraryListView.hideProgressBar();
                 if (response.body() != null) {
                     if (response.body().getSuccess() == 1) {
-                        if (response.body().getData().isEmpty()) {
-                            libraryListView.onEmptyList();
-                        } else {
-                            libraryListView.setTeacherData(response.body().getData());
-                        }
+                      //  if (response.body().getData().size()>0) {
+                          try{
+                              libraryListView.setTeacherData(response.body().getData());
+
+                          }catch (Exception e){
+                              libraryListView.onEmptyList();
+
+                          }
+
+                     //   } else {
+                     //   }
                     } else {
                         libraryListView.onEmptyList();
                         libraryListView.setError(response.body().getMessage());
@@ -115,9 +166,15 @@ public class LibraryListPresenter {
                 libraryListView.setError(t.getLocalizedMessage());
             }
         });
+
     }
 
     public void setTeacherLibraries(TeacherLibraryAdapter.MainViewHolder holder, TeacherLibraryModel teacherLibraryModel) {
+
+       Log.e("eeeee",teacherLibraryModel.getTitle());
+        Log.e("eeeee",teacherLibraryModel.getFile_url());
+        Log.e("mmm",teacherLibraryModel.getID());
+
         if (teacherLibraryModel.getTitle().isEmpty()) {
             holder.textView.setText(R.string.revision_without_title);
         } else {
@@ -130,9 +187,9 @@ public class LibraryListPresenter {
         holder.itemView.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             bundle.putString("revisionName", teacherLibraryModel.getTitle());
-            bundle.putString("fileUrl", teacherLibraryModel.getFileUrl());
+            bundle.putString("fileUrl", teacherLibraryModel.getFile_url());
             bundle.putString("subjectName", teacherLibraryModel.getSubName());
-            bundle.putString("youtubeLink", teacherLibraryModel.getLinkOfYoutube());
+            bundle.putString("youtubeLink", teacherLibraryModel.getLink_youtube());
             bundle.putString("userType", "E");
             libraryListView.startRevisionLibraryInfoFragment(bundle);
         });

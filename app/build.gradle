@@ -73,6 +73,7 @@ dependencies {
     implementation 'com.jaydenxiao:guider:1.0.0'
 
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.17'
 
 
     annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'

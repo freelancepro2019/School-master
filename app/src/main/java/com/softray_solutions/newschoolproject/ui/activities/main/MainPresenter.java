@@ -46,9 +46,9 @@ class MainPresenter {
             case R.id.bottom_nav_home:
                 view.openNewFragment(false, new MainFragment(), "main");
                 break;
-            case R.id.bottom_nav_notifications:
+          /*  case R.id.bottom_nav_notifications:
                 view.openNewFragment(false, new NotificationsFragment(), "notifications");
-                break;
+                break;*/
             case R.id.bottom_nav_tools:
                 view.openNewFragment(false, new ToolsFragment(), "tools");
                 break;
@@ -70,9 +70,9 @@ class MainPresenter {
             case R.id.bottom_nav_home:
                 view.setActionBarTitle(R.string.main_activity_title);
                 break;
-            case R.id.bottom_nav_notifications:
+           /* case R.id.bottom_nav_notifications:
                 view.setActionBarTitle(R.string.notifications);
-                break;
+                break;*/
             case R.id.bottom_nav_tools:
                 view.setActionBarTitle(R.string.tools_action_bar_title);
                 break;

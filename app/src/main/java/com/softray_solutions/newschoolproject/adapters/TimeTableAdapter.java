@@ -26,7 +26,6 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.Main
         this.classes = classes;
         this.presenter = presenter;
     }
-
     @NonNull
     @Override
     public MainViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

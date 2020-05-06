@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.text.util.Linkify;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,7 +49,13 @@ public class LessonDetailsHolder extends RecyclerView.ViewHolder implements Less
 
     public void startIntent(Uri uri)
     {
-        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
-        context.startActivity(intent);
+        try {
+
+            Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+            context.startActivity(intent);
+        }catch (Exception e){
+            Toast.makeText(context, R.string.text, Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

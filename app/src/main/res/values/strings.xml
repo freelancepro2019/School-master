@@ -219,5 +219,7 @@
     <string name="to">إلى</string>
     <string name="groups">المجموعات</string>
     <string name="ch_group">إختر المجموعة لارسال رسالة</string>
+    <string name="text">هذا مجرد نص</string>
+    <string name="lesson_scripts_required">اسكريبتات الدرس مطلوبه</string>
 
 </resources>

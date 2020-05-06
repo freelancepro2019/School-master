@@ -164,10 +164,6 @@ public class ClassScheduleActivity extends AppCompatActivity implements ClassSch
 
                 }
 
-
-
-
-
                 /*switch (i) {
                     case 0:
                         classes.add(new StudentClass(getString(R.string.sunday), null));

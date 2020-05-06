@@ -1,9 +1,17 @@
 package com.softray_solutions.newschoolproject.adapters;
 
 import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -20,10 +28,13 @@ import com.softray_solutions.newschoolproject.model.MessageModel;
 import com.softray_solutions.newschoolproject.ui.activities.activity_chat.ChatActivity;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int msg_left = 1;
@@ -32,7 +43,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int img_right = 4;
     private final int file_left = 5;
     private final int file_right = 6;
-
+    private final int sound_left = 7;
+    private final int sound_right = 8;
     private List<MessageModel> list;
     private Context context;
     private String current_user_id;
@@ -40,6 +52,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private LayoutInflater inflater;
     private String base_url_image = "";
     private ChatActivity activity;
+    private int pos = -1;
+
 
     public ChatAdapter(List<MessageModel> list, Context context, String current_user_id, String chat_user_image) {
         this.list = list;
@@ -68,9 +82,16 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } else if (viewType == file_left) {
             ChatFileLeftRowBinding binding = DataBindingUtil.inflate(inflater, R.layout.chat_file_left_row, parent, false);
             return new HolderFileLeft(binding);
-        } else {
+        } else if (viewType == file_right) {
             ChatFileRightRowBinding binding = DataBindingUtil.inflate(inflater, R.layout.chat_file_right_row, parent, false);
             return new HolderFileRight(binding);
+        }    else if (viewType == sound_left){
+            View view = LayoutInflater.from(context).inflate(R.layout.chat_message_audio_left_row, parent, false);
+            return new SoundLeftHolder(view);
+
+        }else {
+            View view = LayoutInflater.from(context).inflate(R.layout.chat_message_audio_right_row, parent, false);
+            return new SoundLeftHolder(view);
         }
 
 
@@ -85,12 +106,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             HolderMsgLeft holderMsgLeft = (HolderMsgLeft) holder;
             holderMsgLeft.binding.setModel(model);
             holderMsgLeft.binding.tvTime.setText(getTime(Long.parseLong(model.getCreated_at())));
-        } else if (holder instanceof HolderMsgRight) {
+        }
+        else if (holder instanceof HolderMsgRight) {
             HolderMsgRight holderMsgRight = (HolderMsgRight) holder;
             holderMsgRight.binding.setModel(model);
             holderMsgRight.binding.tvTime.setText(getTime(Long.parseLong(model.getCreated_at())));
 
-        } else if (holder instanceof HolderImageLeft) {
+        }
+        else if (holder instanceof HolderImageLeft) {
             HolderImageLeft holderImageLeft = (HolderImageLeft) holder;
             holderImageLeft.binding.setModel(model);
             holderImageLeft.binding.tvTime.setText(getTime(Long.parseLong(model.getCreated_at())));
@@ -101,7 +124,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 MessageModel model1 = list.get(holderImageLeft.getAdapterPosition());
                 activity.setItemFile(model1);
             });
-        } else if (holder instanceof HolderImageRight) {
+        }
+        else if (holder instanceof HolderImageRight) {
             HolderImageRight holderImageRight = (HolderImageRight) holder;
             holderImageRight.binding.setModel(model);
             holderImageRight.binding.tvTime.setText(getTime(Long.parseLong(model.getCreated_at())));
@@ -112,7 +136,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 activity.setItemFile(model1);
             });
 
-        } else if (holder instanceof HolderFileLeft) {
+        }
+        else if (holder instanceof HolderFileLeft) {
             HolderFileLeft holderFileLeft = (HolderFileLeft) holder;
             holderFileLeft.binding.setModel(model);
             holderFileLeft.binding.setUrl(base_url_image);
@@ -123,7 +148,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 activity.setItemFile(model1);
 
             });
-        } else if (holder instanceof HolderFileRight) {
+        }
+        else if (holder instanceof HolderFileRight) {
             HolderFileRight holderFileRight = (HolderFileRight) holder;
             holderFileRight.binding.setModel(model);
             holderFileRight.binding.setUrl(base_url_image);
@@ -134,6 +160,75 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 activity.setItemFile(model1);
 
             });
+        }
+        else if (holder instanceof SoundRightHolder) {
+            Log.e("3", "3");
+
+            SoundRightHolder imageLeftHolder = (SoundRightHolder) holder;
+            MessageModel messageModel = list.get(imageLeftHolder.getAdapterPosition());
+            imageLeftHolder.imagePlay.setOnClickListener(view -> {
+                pos = position;
+                notifyDataSetChanged();
+
+            });
+            imageLeftHolder.BindData(messageModel);
+            if (pos == position) {
+                if (imageLeftHolder.mediaPlayer != null && imageLeftHolder.mediaPlayer.isPlaying()) {
+                    imageLeftHolder.mediaPlayer.pause();
+                    imageLeftHolder.imagePlay.setImageResource(R.drawable.ic_play);
+
+                } else {
+
+                    if (imageLeftHolder.mediaPlayer != null) {
+                        imageLeftHolder.imagePlay.setImageResource(R.drawable.ic_pause);
+
+                        imageLeftHolder.mediaPlayer.start();
+                        imageLeftHolder.updateProgress();
+
+
+                    }
+                }
+            } else {
+                if (imageLeftHolder.mediaPlayer != null && imageLeftHolder.mediaPlayer.isPlaying()) {
+                    imageLeftHolder.mediaPlayer.pause();
+                    imageLeftHolder.imagePlay.setImageResource(R.drawable.ic_play);
+
+                }
+            }
+        }
+        else if (holder instanceof SoundLeftHolder) {
+            Log.e("4", "4");
+            SoundLeftHolder imageRightHolder = (SoundLeftHolder) holder;
+            MessageModel messageModel = list.get(imageRightHolder.getAdapterPosition());
+            imageRightHolder.imagePlay.setOnClickListener(view -> {
+
+                pos = position;
+                notifyDataSetChanged();
+            });
+            imageRightHolder.BindData(messageModel);
+            if (pos == position) {
+                if (imageRightHolder.mediaPlayer != null && imageRightHolder.mediaPlayer.isPlaying()) {
+                    imageRightHolder.mediaPlayer.pause();
+                    imageRightHolder.imagePlay.setImageResource(R.drawable.ic_play);
+
+                } else {
+
+                    if (imageRightHolder.mediaPlayer != null) {
+                        imageRightHolder.imagePlay.setImageResource(R.drawable.ic_pause);
+
+                        imageRightHolder.mediaPlayer.start();
+                        imageRightHolder.updateProgress();
+
+
+                    }
+                }
+            } else {
+                if (imageRightHolder.mediaPlayer != null && imageRightHolder.mediaPlayer.isPlaying()) {
+                    imageRightHolder.mediaPlayer.pause();
+                    imageRightHolder.imagePlay.setImageResource(R.drawable.ic_play);
+
+                }
+            }
         }
     }
 
@@ -239,6 +334,148 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void setBase_url_image(String url) {
         this.base_url_image = url;
+    }
+
+    public class SoundRightHolder extends RecyclerView.ViewHolder
+    {
+        private TextView recordDuration, tv_time;
+        private ImageView imagePlay;
+        private SeekBar seekBar;
+        private MediaPlayer mediaPlayer;
+        private Handler handler;
+        private Runnable runnable;
+
+        public SoundRightHolder(View itemView) {
+            super(itemView);
+            imagePlay = itemView.findViewById(R.id.imagePlay);
+            recordDuration = itemView.findViewById(R.id.recordDuration);
+            tv_time = itemView.findViewById(R.id.tv_time);
+
+            seekBar = itemView.findViewById(R.id.seekBar);
+
+        }
+
+        private void initAudio(MessageModel messageModel) {
+            try {
+
+
+                mediaPlayer = new MediaPlayer();
+               // mediaPlayer.setDataSource(Tags.IMAGE_URL + messageModel.getFile());
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mediaPlayer.setVolume(100.0f, 100.0f);
+                mediaPlayer.setLooping(false);
+                mediaPlayer.prepare();
+
+                mediaPlayer.setOnPreparedListener(mediaPlayer -> {
+                    seekBar.setMax(mediaPlayer.getDuration());
+                    imagePlay.setImageResource(R.drawable.ic_play);
+                });
+
+                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                    imagePlay.setImageResource(R.drawable.ic_play);
+                    seekBar.setProgress(0);
+                    handler.removeCallbacks(runnable);
+
+                });
+
+            } catch (IOException e) {
+                Log.e("eeeex", e.getMessage());
+                mediaPlayer.release();
+                mediaPlayer = null;
+                if (handler != null && runnable != null) {
+                    handler.removeCallbacks(runnable);
+                }
+
+            }
+        }
+
+        private void updateProgress() {
+            seekBar.setProgress(mediaPlayer.getCurrentPosition());
+            handler = new Handler();
+            runnable = this::updateProgress;
+            handler.postDelayed(runnable, 1000);
+
+
+        }
+
+        public void BindData(final MessageModel messageModel) {
+            tv_time.setText(getTime(Long.parseLong(messageModel.getCreated_at())));
+            initAudio(messageModel);
+        }
+
+
+    }
+
+    public class SoundLeftHolder extends RecyclerView.ViewHolder {
+        private CircleImageView image;
+        private TextView recordDuration, tv_time;
+        private ImageView imagePlay;
+        private SeekBar seekBar;
+        private MediaPlayer mediaPlayer;
+        private Handler handler;
+        private Runnable runnable;
+
+        public SoundLeftHolder(View itemView) {
+            super(itemView);
+
+            image = itemView.findViewById(R.id.image);
+            imagePlay = itemView.findViewById(R.id.imagePlay);
+            recordDuration = itemView.findViewById(R.id.recordDuration);
+            tv_time = itemView.findViewById(R.id.tv_time);
+
+            seekBar = itemView.findViewById(R.id.seekBar);
+        }
+
+        private void initAudio(MessageModel messageModel) {
+            try {
+
+
+                mediaPlayer = new MediaPlayer();
+               // mediaPlayer.setDataSource(Tags.IMAGE_URL + messageModel.getFile());
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mediaPlayer.setVolume(100.0f, 100.0f);
+                mediaPlayer.setLooping(false);
+                mediaPlayer.prepare();
+
+                mediaPlayer.setOnPreparedListener(mediaPlayer -> {
+                    seekBar.setMax(mediaPlayer.getDuration());
+                    imagePlay.setImageResource(R.drawable.ic_play);
+                });
+
+                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+                    imagePlay.setImageResource(R.drawable.ic_play);
+                    seekBar.setProgress(0);
+                    handler.removeCallbacks(runnable);
+
+                });
+
+            } catch (IOException e) {
+                Log.e("eeeex", e.getMessage());
+                mediaPlayer.release();
+                mediaPlayer = null;
+                if (handler != null && runnable != null) {
+                    handler.removeCallbacks(runnable);
+                }
+
+            }
+        }
+
+        private void updateProgress() {
+            seekBar.setProgress(mediaPlayer.getCurrentPosition());
+            handler = new Handler();
+            runnable = this::updateProgress;
+            handler.postDelayed(runnable, 1000);
+
+
+        }
+
+        public void BindData(final MessageModel messageModel) {
+
+            tv_time.setText(getTime(Long.parseLong(messageModel.getCreated_at())));
+            initAudio(messageModel);
+        }
+
+
     }
 
 }

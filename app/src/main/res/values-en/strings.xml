@@ -218,4 +218,6 @@
     <string name="to">To</string>
     <string name="groups">Groups</string>
     <string name="ch_group">Choose group to send message</string>
+    <string name="text">"this is a text "</string>
+    <string name="lesson_scripts_required">اسكريبتات الدرس مطلوبه</string>
 </resources>

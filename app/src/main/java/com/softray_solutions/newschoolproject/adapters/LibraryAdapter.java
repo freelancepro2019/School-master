@@ -26,7 +26,6 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.MainView
         this.libraries = libraries;
         this.presenter = presenter;
     }
-
     @NonNull
     @Override
     public LibraryAdapter.MainViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

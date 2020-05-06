@@ -4,72 +4,61 @@ import com.google.gson.annotations.SerializedName;
 
 import javax.annotation.Generated;
 
-@Generated("net.hexar.json2pojo")
-@SuppressWarnings("unused")
 public class TeacherLibraryModel {
 
 
-    @SerializedName("File_url")
-    private String mFileUrl;
-    @SerializedName("ID")
-    private String mID;
-    @SerializedName("Lesson_Title")
-    private String mLessonTitle;
-    @SerializedName("linkOfYoutube")
-    private String mLinkOfYoutube;
-    @SerializedName("SubName")
-    private String mSubName;
-    @SerializedName("Title")
-    private String mTitle;
+    private String File_url;
+    private String ID;
+  //  private String Lesson_Title;
+    private String link_youtube;
+    private String SubName;
+    private String Title;
 
-
-    public String getFileUrl() {
-        return mFileUrl;
+    public String getFile_url() {
+        return File_url;
     }
 
-    public void setFileUrl(String fileUrl) {
-        mFileUrl = fileUrl;
+    public void setFile_url(String file_url) {
+        File_url = file_url;
     }
 
     public String getID() {
-        return mID;
+        return ID;
     }
 
-    public void setID(String iD) {
-        mID = iD;
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
-    public String getLessonTitle() {
-        return mLessonTitle;
+   /* public String getLesson_Title() {
+        return Lesson_Title;
     }
 
-    public void setLessonTitle(String lessonTitle) {
-        mLessonTitle = lessonTitle;
+    public void setLesson_Title(String lesson_Title) {
+        Lesson_Title = lesson_Title;
+    }*/
+
+    public String getLink_youtube() {
+        return link_youtube;
     }
 
-    public String getLinkOfYoutube() {
-        return mLinkOfYoutube;
+    public void setLink_youtube(String link_youtube) {
+        this.link_youtube = link_youtube;
     }
-
-    public void setLinkOfYoutube(String linkOfYoutube) {
-        mLinkOfYoutube = linkOfYoutube;
-    }
-
 
     public String getSubName() {
-        return mSubName;
+        return SubName;
     }
 
     public void setSubName(String subName) {
-        mSubName = subName;
+        SubName = subName;
     }
 
     public String getTitle() {
-        return mTitle;
+        return Title;
     }
 
     public void setTitle(String title) {
-        mTitle = title;
+        Title = title;
     }
-
 }

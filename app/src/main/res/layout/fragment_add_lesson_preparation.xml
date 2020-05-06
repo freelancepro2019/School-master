@@ -127,6 +127,22 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/strategy_edit" />
 
+
+            <EditText
+                android:id="@+id/scripts_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="24dp"
+                android:ems="10"
+                android:hint="@string/scripts"
+                android:inputType="textMultiLine"
+                app:layout_constraintBottom_toTopOf="@+id/means_edit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/goals_edit" />
+
             <EditText
                 android:id="@+id/means_edit"
                 android:layout_width="0dp"
@@ -140,7 +156,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/preface_edit"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/goals_edit" />
+                app:layout_constraintTop_toBottomOf="@+id/scripts_edit" />
 
             <EditText
                 android:id="@+id/preface_edit"

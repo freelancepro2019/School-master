@@ -62,6 +62,8 @@ public class AddLessonPreparation extends Fragment implements AddLessonPreparati
     EditText strategyEdit;
     @BindView(R.id.goals_edit)
     EditText goalsEdit;
+    @BindView(R.id.scripts_edit)
+    EditText scriptEdit;
     @BindView(R.id.means_edit)
     EditText meansEdit;
     @BindView(R.id.preface_edit)
@@ -74,7 +76,7 @@ public class AddLessonPreparation extends Fragment implements AddLessonPreparati
     private List<File> fileList = new ArrayList<>();
     private AddLessonPreparationPresenter preparationPresenter;
     private String lessonTitle, dayDate, lessonStrategy,
-            lessonGoals, lessonMeans, lessonPreface, lessonEval, lessonHomeworks, filePreviewString;
+            lessonGoals,lessonScript, lessonMeans, lessonPreface, lessonEval, lessonHomeworks, filePreviewString,scripts;
     private File file;
 
     public AddLessonPreparation() {
@@ -262,6 +264,7 @@ public class AddLessonPreparation extends Fragment implements AddLessonPreparati
             lessonTitle = null;
             lessonStrategy = null;
             lessonGoals = null;
+            lessonScript = null;
             lessonMeans = null;
             lessonPreface = null;
             lessonEval = null;
@@ -269,6 +272,7 @@ public class AddLessonPreparation extends Fragment implements AddLessonPreparati
             titleEdit.setText("");
             strategyEdit.setText("");
             goalsEdit.setText("");
+            scriptEdit.setText("");
             meansEdit.setText("");
             prefaceEditText.setText("");
             evalEdit.setText("");
@@ -285,6 +289,7 @@ public class AddLessonPreparation extends Fragment implements AddLessonPreparati
         lessonTitle = preparationPresenter.extractStringFromEditText(titleEdit);
         lessonStrategy = preparationPresenter.extractStringFromEditText(strategyEdit);
         lessonGoals = preparationPresenter.extractStringFromEditText(goalsEdit);
+        lessonScript = preparationPresenter.extractStringFromEditText(scriptEdit);
         lessonMeans = preparationPresenter.extractStringFromEditText(meansEdit);
         lessonPreface = preparationPresenter.extractStringFromEditText(prefaceEditText);
         lessonEval = preparationPresenter.extractStringFromEditText(evalEdit);
@@ -294,9 +299,11 @@ public class AddLessonPreparation extends Fragment implements AddLessonPreparati
             titleEdit.setError(getString(R.string.lesson_title_required));
         } else if (lessonStrategy.isEmpty()) {
             strategyEdit.setError(getString(R.string.lesson_strategy_required));
-        } else if (lessonGoals.isEmpty()) {
+        }  else if (lessonGoals.isEmpty()) {
             goalsEdit.setError(getString(R.string.lesson_goals_required));
-        } else if (lessonMeans.isEmpty()) {
+        } else if (lessonScript.isEmpty()) {
+            scriptEdit.setError(getString(R.string.lesson_scripts_required));
+        }else if (lessonMeans.isEmpty()) {
             meansEdit.setError(getString(R.string.lesson_means_required));
         } else if (lessonPreface.isEmpty()) {
             prefaceEditText.setError(getString(R.string.lesson_preface_required));
@@ -307,10 +314,10 @@ public class AddLessonPreparation extends Fragment implements AddLessonPreparati
         } else if (dayDate.isEmpty()) {
             Toast.makeText(getContext(), R.string.lesson_date_required, Toast.LENGTH_SHORT).show();
         } else if (file != null) {
-            preparationPresenter.uploadFile(getContext(), fileList, lessonTitle, dayDate, lessonStrategy, lessonGoals, lessonMeans
+            preparationPresenter.uploadFile(getContext(), fileList, lessonTitle, dayDate, lessonStrategy, lessonGoals,lessonScript, lessonMeans
                     , lessonPreface, lessonEval, lessonHomeworks);
         } else {
-            preparationPresenter.uploadLesson(lessonTitle, dayDate, lessonStrategy, lessonGoals, lessonMeans
+            preparationPresenter.uploadLesson(lessonTitle, dayDate, lessonStrategy, lessonGoals,lessonScript, lessonMeans
                     , lessonPreface, lessonEval, lessonHomeworks);
         }
     }

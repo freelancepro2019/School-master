@@ -47,7 +47,6 @@ public class TeacherNotificationAdapter extends RecyclerView.Adapter<TeacherNoti
     public void onBindViewHolder(@NonNull TeacherNotificationAdapter.MainViewHolder holder, int position) {
         presenter.bindTeacherNotificationToViews(holder, position, dataSet);
     }
-
     @Override
     public int getItemCount() {
         return dataSet.size();
