@@ -221,5 +221,6 @@
     <string name="ch_group">إختر المجموعة لارسال رسالة</string>
     <string name="text">هذا مجرد نص</string>
     <string name="lesson_scripts_required">اسكريبتات الدرس مطلوبه</string>
+    <string name="recording">تسجيل ...</string>
 
 </resources>

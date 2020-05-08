@@ -33,6 +33,7 @@ public class Common {
     public static final String TEACHER ="E";
     public static final String FATHER ="F";
     public static final String ADMIN ="U";
+    public static final String AudioPath =Environment.getExternalStorageDirectory().getAbsolutePath()+"/SchoolApp";
 
 
     public static MyInterface getMyInterface() {

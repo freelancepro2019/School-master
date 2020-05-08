@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.jaydenxiao:guider:1.0.0@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/85cd209583b4ceabd7de7fd0b8b43f34/jetified-guider-1.0.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/85cd209583b4ceabd7de7fd0b8b43f34/jetified-guider-1.0.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c43d68b33f8f1288596619bb3d41913b/jetified-guider-1.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c43d68b33f8f1288596619bb3d41913b/jetified-guider-1.0.0/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jaydenxiao/guider/1.0.0/899c2d535ff67d3176a884c26d8a12ff97a1b067/guider-1.0.0-javadoc.jar!/" />

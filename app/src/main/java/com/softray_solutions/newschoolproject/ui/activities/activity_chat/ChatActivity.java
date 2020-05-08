@@ -1,6 +1,7 @@
 package com.softray_solutions.newschoolproject.ui.activities.activity_chat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -9,12 +10,15 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.media.AudioFormat;
 import android.media.AudioManager;
+import android.media.AudioRecord;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -63,7 +67,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     private ChatUserModel chatUserModel;
     private SharedPreferences preferences;
     private int read_req =100 ,read_req2= 300;
-    private int camera_req = 400, write_req = 500;
+    private int camera_req = 400, write_req = 500,write_mic=600;
     private String attachment ="";
     private User user;
     private String read_perm = Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -78,14 +82,12 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     private String file_to_download = "";
     private boolean isPermissionGranted = false;
     private MediaRecorder recorder;
-    private SeekBar seekBar;
     private String path;
     private MediaPlayer mediaPlayer;
     private Handler handler;
     private Runnable runnable;
     private final String audio_perm = Manifest.permission.RECORD_AUDIO;
     private final String write_permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +106,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initView() {
         presenter = new ChatPresenter(this, this);
         messageModelList = new ArrayList<>();
@@ -164,43 +167,47 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             checkCameraPermission();
 
         } );
-        binding.imageMic.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (isPermissionGranted) {
-                        if (recorder != null) {
-                            recorder.release();
-                            recorder = null;
+        binding.imageMic.setOnTouchListener((view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                if (isPermissionGranted) {
+                    if (recorder != null) {
+                        recorder.release();
+                        recorder = null;
 
-                        }
-                        initRecorder();
-
-                    } else {
-                        Toast.makeText(ChatActivity.this, "Cannot access mic", Toast.LENGTH_SHORT).show();
-                    }
-                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    if (isPermissionGranted) {
-
-                        try {
-                            recorder.stop();
-                            //  Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
-                            mediaPlayer = null;
-                            initAudio();
-
-                        } catch (Exception e) {
-                            // binding.imageWave.setVisibility(View.GONE);
-                        }
-
-
-                    } else {
-                        Toast.makeText(ChatActivity.this, "Cannot access mic", Toast.LENGTH_SHORT).show();
                     }
 
+                    initRecorder();
 
+
+                } else {
+
+                    checkWritePermissionAndMic();
                 }
-                return true;
+            } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                if (isPermissionGranted) {
+
+                    try {
+                        recorder.stop();
+                        mediaPlayer = null;
+                        initAudio();
+
+                        binding.flRecording.setVisibility(View.GONE);
+
+                    } catch (Exception e) {
+
+                        binding.flRecording.setVisibility(View.GONE);
+
+                    }
+
+
+
+                } else {
+                    Toast.makeText(ChatActivity.this, "Cannot access mic", Toast.LENGTH_SHORT).show();
+                }
+
+
             }
+            return true;
         });
 
         binding.btnSend.setOnClickListener(view -> {
@@ -307,6 +314,21 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     }
 
+    private void checkWritePermissionAndMic() {
+
+        if (ContextCompat.checkSelfPermission(this, audio_perm) != PackageManager.PERMISSION_GRANTED) {
+
+
+            isPermissionGranted = false;
+
+            ActivityCompat.requestPermissions(this, new String[]{write_permission, audio_perm}, write_mic);
+
+
+        } else {
+            isPermissionGranted = true;
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -339,6 +361,15 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             } else {
                 Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
             }
+        }else if (requestCode==write_mic&&grantResults.length>0)
+        {
+            if (grantResults[0]==PackageManager.PERMISSION_GRANTED&&grantResults[1]==PackageManager.PERMISSION_GRANTED)
+            {
+                isPermissionGranted = true;
+            }else
+                {
+                    isPermissionGranted = false;
+                }
         }
     }
 
@@ -386,6 +417,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             binding.cardView.setVisibility(View.VISIBLE);
 
         }
+
     }
 
     private Uri getBitmapFromUri(Bitmap bitmap) {
@@ -467,35 +499,8 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             file.delete();
         }
     }
-    private void setdata() {
-        binding.cardView.setVisibility(View.GONE);
-        deleteFile();
-
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
-
-        if (handler != null && runnable != null) {
-            handler.removeCallbacks(runnable);
-            runnable = null;
-        }
-    }
-
-  /*  private void checkWritePermission() {
-
-        if (ContextCompat.checkSelfPermission(this, audio_perm) != PackageManager.PERMISSION_GRANTED) {
 
 
-            isPermissionGranted = false;
-
-            ActivityCompat.requestPermissions(this, new String[]{write_permission, audio_perm}, write_req);
-
-
-        } else {
-            isPermissionGranted = true;
-        }
-    }*/
 
     private void initAudio() {
         try {
@@ -507,22 +512,8 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             mediaPlayer.setVolume(100.0f, 100.0f);
             mediaPlayer.setLooping(false);
             mediaPlayer.prepare();
-           // binding.recordDuration.setText(getDuration(mediaPlayer.getDuration()));
 
-            mediaPlayer.setOnPreparedListener(mediaPlayer -> {
-                binding.cardView2.setVisibility(View.VISIBLE);
-                seekBar.setMax(mediaPlayer.getDuration());
-                binding.imagePlay.setImageResource(R.drawable.ic_play);
-            });
-
-            mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-               // binding.recordDuration.setText(getDuration(mediaPlayer.getDuration()));
-                binding.imagePlay.setImageResource(R.drawable.ic_play);
-                seekBar.setProgress(0);
-                handler.removeCallbacks(runnable);
-
-            });
-            binding.images.setVisibility(View.GONE);
+            mediaPlayer.start();
 
 
         } catch (IOException e) {
@@ -532,30 +523,15 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             if (handler != null && runnable != null) {
                 handler.removeCallbacks(runnable);
             }
-            binding.cardView2.setVisibility(View.GONE);
 
         }
     }
 
-    private void updateProgress() {
-        seekBar.setProgress(mediaPlayer.getCurrentPosition());
-       // binding.recordDuration.setText(getDuration(mediaPlayer.getCurrentPosition()));
-        handler = new Handler();
-        runnable = this::updateProgress;
-        handler.postDelayed(runnable, 1000);
-
-
-    }
-
-
-
     private void initRecorder() {
-        binding.images.setVisibility(View.VISIBLE);
-        Calendar calendar = Calendar.getInstance();
         isPermissionGranted = true;
-        String audioName = "AUD" + calendar.getTimeInMillis() + ".mp3";
+        String audioName = "AUD" + System.currentTimeMillis() + ".mp3";
 
-        File folder_done = new File("Tags.local_folder_path");
+        File folder_done = new File(Common.AudioPath);
 
         if (!folder_done.exists()) {
             folder_done.mkdir();
@@ -573,6 +549,9 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         recorder.setAudioChannels(1);
         recorder.setOutputFile(path);
         try {
+
+
+            binding.flRecording.setVisibility(View.VISIBLE);
             recorder.prepare();
             recorder.start();
 
@@ -580,6 +559,8 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         } catch (IOException e) {
             e.printStackTrace();
             Log.e("Failed", "Failed");
+
+            binding.flRecording.setVisibility(View.GONE);
 
 
             if (mediaPlayer != null) {
@@ -591,6 +572,9 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         }
 
     }
+
+
+
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
