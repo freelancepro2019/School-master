@@ -9,6 +9,8 @@ import com.softray_solutions.newschoolproject.data.network.service.MyInterface;
 import com.softray_solutions.newschoolproject.model.MessageDataModel;
 import com.softray_solutions.newschoolproject.model.MessageModel;
 
+import java.io.File;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -217,4 +219,48 @@ public class ChatPresenter {
                 });
     }
 
+    public void sendAudio(String user_id,String to_user_id,String school_id,String audio_path)
+    {
+        RequestBody user_id_part = Common.getRequestBodyText(user_id);
+        RequestBody to_user_id_part = Common.getRequestBodyText(to_user_id);
+        MultipartBody.Part file_part = Common.getMultiPartAudio(audio_path, "audio");
+        MyInterface myInterface = Common.getMyInterface();
+        myInterface.sendChatAudioFile(user_id_part, to_user_id_part, file_part)
+                .enqueue(new Callback<MessageModel>() {
+                    @Override
+                    public void onResponse(Call<MessageModel> call, Response<MessageModel> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            listener.onMessageSendSuccess(response.body());
+                        } else {
+                            if (response.code() == 500) {
+                                listener.onError("Server Error");
+
+                            } else {
+                                listener.onError(context.getString(R.string.failed));
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<MessageModel> call, Throwable t) {
+
+                        try {
+
+                            if (t.getMessage() != null) {
+                                Log.e("msg_chat_error", t.getMessage() + "__");
+
+                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
+                                    listener.onError(context.getString(R.string.check_internet));
+                                } else {
+                                    listener.onError(context.getString(R.string.failed));
+
+                                }
+                            }
+                        } catch (Exception e) {
+
+                        }
+                    }
+                });
+    }
 }

@@ -8,11 +8,13 @@ public class MessageModel implements Serializable {
     private String conversation_id;
     private String msg_text;
     private String attachment;
+    private String  audio;
     private String read;
     private String created_at;
     private String from_user;
     private String to_user;
     private String base;
+    private String base_audio;
 
     public String getId() {
         return id;
@@ -52,5 +54,13 @@ public class MessageModel implements Serializable {
 
     public String getBase() {
         return base;
+    }
+
+    public String getBase_audio() {
+        return base_audio;
+    }
+
+    public String getAudio() {
+        return audio;
     }
 }

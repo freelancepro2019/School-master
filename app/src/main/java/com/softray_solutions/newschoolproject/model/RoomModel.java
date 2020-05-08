@@ -23,6 +23,7 @@ public class RoomModel implements Serializable {
         private String conversation_id;
         private String msg_text;
         private String attachment;
+        private String audio;
         private String read;
         private String created_at;
         private String from_user;
@@ -86,6 +87,10 @@ public class RoomModel implements Serializable {
 
         public void setRead(String read) {
             this.read = read;
+        }
+
+        public String getAudio() {
+            return audio;
         }
     }
 

@@ -224,6 +224,16 @@ public class Common {
 
     }
 
+
+    public static MultipartBody.Part getMultiPartAudio(String path, String partName) {
+        File file = getFileFromImagePath(path);
+        RequestBody requestBody = getRequestBodyFile(file);
+        MultipartBody.Part part = MultipartBody.Part.createFormData(partName,file.getName(), requestBody);
+        return part;
+
+    }
+
+
     private static RequestBody getRequestBodyImage(File file) {
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
         return requestBody;
@@ -231,6 +241,11 @@ public class Common {
 
     private static RequestBody getRequestBodyFile(File file) {
         RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
+        return requestBody;
+    }
+
+    private static RequestBody getRequestBodyAudio(File file) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("audio/*"), file);
         return requestBody;
     }
 

@@ -189,9 +189,9 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
                     try {
                         recorder.stop();
                         mediaPlayer = null;
-                        initAudio();
-
                         binding.flRecording.setVisibility(View.GONE);
+                        presenter.sendAudio(user.getId(),chatUserModel.getFrom_id(),"",path);
+
 
                     } catch (Exception e) {
 
@@ -434,6 +434,16 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     @Override
     public void onMessageSendSuccess(MessageModel messageModel) {
+        if (!path.isEmpty())
+        {
+            File file = new File(path);
+            if (file.exists())
+            {
+                file.delete();
+
+            }
+            path = "";
+        }
         isNewMessage = true;
         messageModelList.add(messageModel);
         adapter.notifyItemInserted(messageModelList.size() - 1);
@@ -502,6 +512,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
 
 
+/*
     private void initAudio() {
         try {
 
@@ -526,6 +537,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
         }
     }
+*/
 
     private void initRecorder() {
         isPermissionGranted = true;

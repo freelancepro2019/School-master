@@ -38,6 +38,7 @@ public class MessagePresenter {
 
     private void getAllRoom()
     {
+
         listener.showProgressDialog();
         MyInterface myInterface = Common.getMyInterface();
         myInterface.getRoomData(user_id)

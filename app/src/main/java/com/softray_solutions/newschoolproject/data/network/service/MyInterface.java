@@ -163,7 +163,6 @@ public interface MyInterface {
                                                                               @Field("schoolID") String schoolId);
 
 
-
     @POST("android_student/student_supject/get_student_notification")
     @FormUrlEncoded
     Call<ArrayDataModel<StudentNotificaionDataModel>> getStudentNotifications(@Field("studentID") String studentID,
@@ -252,13 +251,9 @@ public interface MyInterface {
     Call<ArrayDataModel<AddLessonPreparationSubject>> getSubjects(@Field("TeacherID") String teacherID, @Field("lang") String lang);
 
 
-
     @POST("android/emp_lesson/upload")
     @Multipart
     Call<ObjectDataModel<String>> uploadAttachment(@Part List<MultipartBody.Part> files);
-
-
-
 
 
     @POST("android/emp_lesson")
@@ -277,7 +272,7 @@ public interface MyInterface {
                                                @Field("files") String filePath,
                                                @Field("Scripts") String Scripts
 
-                                               );
+    );
 
     @POST("android/login/forgetPass")
     @FormUrlEncoded
@@ -342,6 +337,14 @@ public interface MyInterface {
                                         @Part("to_user") RequestBody to_user,
                                         @Part("msg_text") RequestBody msg_text,
                                         @Part MultipartBody.Part file
+    );
+
+
+    @Multipart
+    @POST("chatting/Api/acceptAudioFile")
+    Call<MessageModel> sendChatAudioFile(@Part("user_id") RequestBody user_id,
+                                         @Part("to_user") RequestBody to_user,
+                                         @Part MultipartBody.Part file
     );
 
     @FormUrlEncoded
