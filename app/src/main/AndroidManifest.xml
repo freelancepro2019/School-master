@@ -200,6 +200,7 @@
             />
 
         <service android:name=".service.ServiceDownload" />
+        <service android:name=".service.ServiceUploadAudio"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

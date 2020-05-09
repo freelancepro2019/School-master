@@ -1,6 +1,7 @@
 package com.softray_solutions.newschoolproject.ui.activities.activity_chat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.softray_solutions.newschoolproject.R;
@@ -8,6 +9,7 @@ import com.softray_solutions.newschoolproject.data.network.service.Common;
 import com.softray_solutions.newschoolproject.data.network.service.MyInterface;
 import com.softray_solutions.newschoolproject.model.MessageDataModel;
 import com.softray_solutions.newschoolproject.model.MessageModel;
+import com.softray_solutions.newschoolproject.service.ServiceUploadAudio;
 
 import java.io.File;
 
@@ -219,48 +221,17 @@ public class ChatPresenter {
                 });
     }
 
-    public void sendAudio(String user_id,String to_user_id,String school_id,String audio_path)
+    public void sendAudio(String user_id,String to_user_id,String chat_id,String audio_path)
     {
-        RequestBody user_id_part = Common.getRequestBodyText(user_id);
-        RequestBody to_user_id_part = Common.getRequestBodyText(to_user_id);
-        MultipartBody.Part file_part = Common.getMultiPartAudio(audio_path, "audio");
-        MyInterface myInterface = Common.getMyInterface();
-        myInterface.sendChatAudioFile(user_id_part, to_user_id_part, file_part)
-                .enqueue(new Callback<MessageModel>() {
-                    @Override
-                    public void onResponse(Call<MessageModel> call, Response<MessageModel> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            listener.onMessageSendSuccess(response.body());
-                        } else {
-                            if (response.code() == 500) {
-                                listener.onError("Server Error");
 
-                            } else {
-                                listener.onError(context.getString(R.string.failed));
 
-                            }
-                        }
-                    }
+        Intent intent = new Intent(context, ServiceUploadAudio.class);
+        intent.putExtra("path",audio_path);
+        intent.putExtra("user_id",user_id);
+        intent.putExtra("chat_id",chat_id);
+        intent.putExtra("to_user",to_user_id);
+        context.startService(intent);
 
-                    @Override
-                    public void onFailure(Call<MessageModel> call, Throwable t) {
 
-                        try {
-
-                            if (t.getMessage() != null) {
-                                Log.e("msg_chat_error", t.getMessage() + "__");
-
-                                if (t.getMessage().toLowerCase().contains("failed to connect") || t.getMessage().toLowerCase().contains("unable to resolve host")) {
-                                    listener.onError(context.getString(R.string.check_internet));
-                                } else {
-                                    listener.onError(context.getString(R.string.failed));
-
-                                }
-                            }
-                        } catch (Exception e) {
-
-                        }
-                    }
-                });
     }
 }

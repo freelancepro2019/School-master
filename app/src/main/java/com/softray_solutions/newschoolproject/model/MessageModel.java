@@ -15,6 +15,18 @@ public class MessageModel implements Serializable {
     private String to_user;
     private String base;
     private String base_audio;
+    private boolean status = true;
+
+    public MessageModel() {
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 
     public String getId() {
         return id;

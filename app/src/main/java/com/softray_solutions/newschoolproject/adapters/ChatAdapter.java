@@ -6,6 +6,8 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
+import android.util.SparseBooleanArray;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -51,20 +54,28 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private String current_user_id;
     private String chat_user_image;
+    private String current_user_image;
     private LayoutInflater inflater;
     private String base_url_image = "";
     private String base_url_audio = "";
     private ChatActivity activity;
+    private MediaPlayer mediaPlayer;
     private int pos = -1;
+    private SparseBooleanArray array;
 
 
-    public ChatAdapter(List<MessageModel> list, Context context, String current_user_id, String chat_user_image) {
+
+    public ChatAdapter(List<MessageModel> list, Context context, String current_user_id, String chat_user_image,String current_user_image) {
         this.list = list;
         this.context = context;
         this.current_user_id = current_user_id;
         this.chat_user_image = chat_user_image;
+        this.current_user_image = current_user_image;
         inflater = LayoutInflater.from(context);
         activity = (ChatActivity) context;
+        array = new SparseBooleanArray();
+
+
     }
 
     @NonNull
@@ -89,7 +100,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ChatFileRightRowBinding binding = DataBindingUtil.inflate(inflater, R.layout.chat_file_right_row, parent, false);
             return new HolderFileRight(binding);
         } else if (viewType == sound_left) {
-             ChatMessageAudioLeftRowBinding  binding = DataBindingUtil.inflate(inflater, R.layout.chat_message_audio_left_row, parent, false);
+            ChatMessageAudioLeftRowBinding binding = DataBindingUtil.inflate(inflater, R.layout.chat_message_audio_left_row, parent, false);
             return new SoundLeftHolder(binding);
 
         } else {
@@ -104,6 +115,78 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         MessageModel model = list.get(position);
+
+        if (pos == position) {
+
+            if (holder instanceof SoundRightHolder) {
+
+
+                SoundRightHolder soundRightHolder = (SoundRightHolder) holder;
+
+                if (mediaPlayer!=null){
+                    if (mediaPlayer.isPlaying())
+                    {
+                        soundRightHolder.binding.imagePlay.setImageResource(R.drawable.ic_pause);
+                        soundRightHolder.binding.imagePlay.setVisibility(View.VISIBLE);
+                    }else {
+                        soundRightHolder.binding.imagePlay.setVisibility(View.INVISIBLE);
+                        soundRightHolder.binding.progBar.setVisibility(View.VISIBLE);
+                    }
+
+                }else {
+                    soundRightHolder.binding.imagePlay.setVisibility(View.INVISIBLE);
+
+                }
+
+
+
+
+            } else if (holder instanceof SoundLeftHolder) {
+
+                SoundLeftHolder soundLeftHolder = (SoundLeftHolder) holder;
+
+
+
+                if (mediaPlayer!=null){
+                    if (mediaPlayer.isPlaying())
+                    {
+                        soundLeftHolder.binding.imagePlay.setImageResource(R.drawable.ic_pause);
+                        soundLeftHolder.binding.imagePlay.setVisibility(View.VISIBLE);
+                    }else {
+                        soundLeftHolder.binding.imagePlay.setVisibility(View.INVISIBLE);
+                        soundLeftHolder.binding.progBar.setVisibility(View.VISIBLE);
+                    }
+
+                }else {
+                    soundLeftHolder.binding.imagePlay.setVisibility(View.INVISIBLE);
+
+                }
+
+
+            }
+
+
+        } else {
+
+            if (holder instanceof SoundRightHolder) {
+
+                SoundRightHolder soundRightHolder = (SoundRightHolder) holder;
+                soundRightHolder.binding.imagePlay.setImageResource(R.drawable.ic_play);
+                soundRightHolder.binding.imagePlay.setVisibility(View.VISIBLE);
+                soundRightHolder.binding.progBar.setVisibility(View.GONE);
+
+            } else if (holder instanceof SoundLeftHolder) {
+                SoundLeftHolder soundLeftHolder = (SoundLeftHolder) holder;
+                soundLeftHolder.binding.imagePlay.setImageResource(R.drawable.ic_play);
+                soundLeftHolder.binding.imagePlay.setVisibility(View.VISIBLE);
+                soundLeftHolder.binding.progBar.setVisibility(View.GONE);
+
+
+
+            }
+
+        }
+
 
         if (holder instanceof HolderMsgLeft) {
             HolderMsgLeft holderMsgLeft = (HolderMsgLeft) holder;
@@ -161,69 +244,77 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } else if (holder instanceof SoundRightHolder) {
 
             SoundRightHolder soundRightHolder = (SoundRightHolder) holder;
-            MessageModel messageModel = list.get(soundRightHolder.getAdapterPosition());
-            soundRightHolder.binding.imagePlay.setOnClickListener(view -> {
-                pos = position;
-                notifyDataSetChanged();
+            MessageModel messageModel = list.get(holder.getAdapterPosition());
+            soundRightHolder.BindData(messageModel);
+
+            soundRightHolder.itemView.setOnClickListener(view -> {
+
+                if (holder.getAdapterPosition()!=pos)
+                {
+                    pos = holder.getAdapterPosition();
+                    notifyDataSetChanged();
+                    soundRightHolder.initAudio(list.get(pos));
+
+                }else {
+
+                    if (mediaPlayer!=null){
+                        if (mediaPlayer.isPlaying())
+                        {
+                            soundRightHolder.binding.imagePlay.setImageResource(R.drawable.ic_play);
+                            soundRightHolder.binding.imagePlay.setVisibility(View.VISIBLE);
+                            soundRightHolder.binding.progBar.setVisibility(View.GONE);
+                            stopPlay();
+                            pos = -1;
+                            notifyDataSetChanged();
+                        }else {
+                            soundRightHolder.initAudio(list.get(pos));
+
+                        }
+                    }else {
+                        soundRightHolder.initAudio(list.get(pos));
+                    }
+
+                }
 
             });
-            soundRightHolder.BindData(messageModel);
-            if (pos == position) {
-                if (soundRightHolder.mediaPlayer != null && soundRightHolder.mediaPlayer.isPlaying()) {
 
-                    soundRightHolder.mediaPlayer.pause();
-                    soundRightHolder.binding.imagePlay.setImageResource(R.drawable.ic_play);
-
-                } else {
-
-                    if (soundRightHolder.mediaPlayer != null) {
-                        soundRightHolder.binding.imagePlay.setImageResource(R.drawable.ic_pause);
-
-                        soundRightHolder.mediaPlayer.start();
-                        soundRightHolder.updateProgress();
-
-
-                    }
-                }
-            } else {
-                if (soundRightHolder.mediaPlayer != null && soundRightHolder.mediaPlayer.isPlaying()) {
-                    soundRightHolder.mediaPlayer.pause();
-                    soundRightHolder.binding.imagePlay.setImageResource(R.drawable.ic_play);
-
-                }
-            }
         } else if (holder instanceof SoundLeftHolder) {
             SoundLeftHolder soundLeftHolder = (SoundLeftHolder) holder;
-            MessageModel messageModel = list.get(soundLeftHolder.getAdapterPosition());
-            soundLeftHolder.binding.imagePlay.setOnClickListener(view -> {
-
-                pos = position;
-                notifyDataSetChanged();
-            });
+            MessageModel messageModel = list.get(holder.getAdapterPosition());
             soundLeftHolder.BindData(messageModel);
-            if (pos == position) {
-                if (soundLeftHolder.mediaPlayer != null && soundLeftHolder.mediaPlayer.isPlaying()) {
-                    soundLeftHolder.mediaPlayer.pause();
-                    soundLeftHolder.binding.imagePlay.setImageResource(R.drawable.ic_play);
 
-                } else {
-
-                    if (soundLeftHolder.mediaPlayer != null) {
-                        soundLeftHolder.binding.imagePlay.setImageResource(R.drawable.ic_pause);
-
-                        soundLeftHolder.mediaPlayer.start();
-                        soundLeftHolder.updateProgress();
+            soundLeftHolder.itemView.setOnClickListener(view -> {
+                if (holder.getAdapterPosition()!=pos)
+                {
+                    pos = holder.getAdapterPosition();
+                    soundLeftHolder.initAudio(list.get(pos));
+                    notifyDataSetChanged();
 
 
+                }else {
+
+                    if (mediaPlayer!=null){
+                        if (mediaPlayer.isPlaying())
+                        {
+                            soundLeftHolder.binding.imagePlay.setImageResource(R.drawable.ic_play);
+                            soundLeftHolder.binding.imagePlay.setVisibility(View.VISIBLE);
+                            soundLeftHolder.binding.progBar.setVisibility(View.GONE);
+                            stopPlay();
+                            pos = -1;
+                            notifyDataSetChanged();
+                        }else {
+                            soundLeftHolder.initAudio(list.get(pos));
+
+                        }
+                    }else {
+                        soundLeftHolder.initAudio(list.get(pos));
                     }
-                }
-            } else {
-                if (soundLeftHolder.mediaPlayer != null && soundLeftHolder.mediaPlayer.isPlaying()) {
-                    soundLeftHolder.mediaPlayer.pause();
-                    soundLeftHolder.binding.imagePlay.setImageResource(R.drawable.ic_play);
 
                 }
-            }
+
+            });
+
+
         }
     }
 
@@ -289,147 +380,200 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public HolderFileRight(@NonNull ChatFileRightRowBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+
         }
+
+
     }
 
 
     public class SoundRightHolder extends RecyclerView.ViewHolder {
+
         private ChatMessageAudioRightRowBinding binding;
-        private MediaPlayer mediaPlayer;
-        private Handler handler;
-        private Runnable runnable;
 
 
         public SoundRightHolder(ChatMessageAudioRightRowBinding binding) {
             super(binding.getRoot());
-            this.binding =binding;
+            this.binding = binding;
 
         }
 
+
+        public void BindData(final MessageModel messageModel) {
+            binding.tvTime.setText(getTime(Long.parseLong(messageModel.getCreated_at())));
+            Picasso.get().load(Uri.parse(current_user_image)).fit().into(binding.image);
+
+        }
+
+
         private void initAudio(MessageModel messageModel) {
+
+
+
             try {
 
 
+                if (mediaPlayer!=null)
+                {
+                    stopPlay();
+                }
+
+
+                binding.progBar.setVisibility(View.VISIBLE);
+                binding.imagePlay.setVisibility(View.INVISIBLE);
+
+                Log.e("path", base_url_audio + messageModel.getAudio());
                 mediaPlayer = new MediaPlayer();
-                mediaPlayer.setDataSource(base_url_audio+messageModel.getAudio());
+                mediaPlayer.setDataSource(base_url_audio + messageModel.getAudio());
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 mediaPlayer.setVolume(100.0f, 100.0f);
                 mediaPlayer.setLooping(false);
-                mediaPlayer.prepare();
+                mediaPlayer.prepareAsync();
 
+                mediaPlayer.setOnErrorListener((mp, what, extra) -> {
+                    binding.imagePlay.setVisibility(View.VISIBLE);
+                    binding.imagePlay.setImageResource(R.drawable.ic_play);
+                    binding.progBar.setVisibility(View.GONE);
+                    stopPlay();
+                    return false;
+                });
                 mediaPlayer.setOnPreparedListener(mediaPlayer -> {
+
                     binding.progBar.setVisibility(View.GONE);
                     binding.imagePlay.setVisibility(View.VISIBLE);
-                    binding.seekBar.setMax(mediaPlayer.getDuration());
-                    binding.imagePlay.setImageResource(R.drawable.ic_play);
-                });
-
-                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                    binding.imagePlay.setImageResource(R.drawable.ic_play);
-                    binding.seekBar.setProgress(0);
-                    handler.removeCallbacks(runnable);
+                    binding.imagePlay.setImageResource(R.drawable.ic_pause);
+                    mediaPlayer.start();
 
                 });
+
+                mediaPlayer.setOnCompletionListener(md -> {
+                    if (mediaPlayer!=null)
+                    {
+                        mediaPlayer.release();
+                        mediaPlayer = null;
+                    }
+                    pos = -1;
+
+                    notifyDataSetChanged();
+                });
+
 
             } catch (IOException e) {
                 Log.e("eeeex", e.getMessage());
                 mediaPlayer.release();
                 mediaPlayer = null;
-                if (handler != null && runnable != null) {
-                    handler.removeCallbacks(runnable);
-                }
 
             }
-        }
 
-        private void updateProgress() {
-            binding.seekBar.setProgress(mediaPlayer.getCurrentPosition());
-            handler = new Handler();
-            runnable = this::updateProgress;
-            handler.postDelayed(runnable, 1000);
+
+
+
 
 
         }
 
-        public void BindData(final MessageModel messageModel) {
-            binding.progBar.setIndeterminate(true);
-            binding.progBar.setVisibility(View.VISIBLE);
-            binding.imagePlay.setVisibility(View.GONE);
-            binding.tvTime.setText(getTime(Long.parseLong(messageModel.getCreated_at())));
-            initAudio(messageModel);
-        }
+
 
 
     }
 
     public class SoundLeftHolder extends RecyclerView.ViewHolder {
-        private ChatMessageAudioLeftRowBinding  binding;
-        private MediaPlayer mediaPlayer;
-        private Handler handler;
-        private Runnable runnable;
+        private ChatMessageAudioLeftRowBinding binding;
 
-        public SoundLeftHolder(ChatMessageAudioLeftRowBinding  binding) {
+
+        public SoundLeftHolder(ChatMessageAudioLeftRowBinding binding) {
             super(binding.getRoot());
-            this.binding =binding;
+            this.binding = binding;
 
         }
 
+
+        public void BindData(final MessageModel messageModel) {
+            binding.tvTime.setText(getTime(Long.parseLong(messageModel.getCreated_at())));
+        }
+
         private void initAudio(MessageModel messageModel) {
+
+
+
             try {
 
 
+                if (mediaPlayer!=null)
+                {
+                    stopPlay();
+                }
+
+
+                binding.progBar.setVisibility(View.VISIBLE);
+                binding.imagePlay.setVisibility(View.INVISIBLE);
+
+                Log.e("path", base_url_audio + messageModel.getAudio());
                 mediaPlayer = new MediaPlayer();
-                mediaPlayer.setDataSource(base_url_audio+messageModel.getAudio());
+                mediaPlayer.setDataSource(base_url_audio + messageModel.getAudio());
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 mediaPlayer.setVolume(100.0f, 100.0f);
                 mediaPlayer.setLooping(false);
-                mediaPlayer.prepare();
+                mediaPlayer.prepareAsync();
 
+                mediaPlayer.setOnErrorListener((mp, what, extra) -> {
+                    binding.imagePlay.setVisibility(View.VISIBLE);
+                    binding.imagePlay.setImageResource(R.drawable.ic_play);
+                    binding.progBar.setVisibility(View.GONE);
+                    stopPlay();
+                    return false;
+                });
                 mediaPlayer.setOnPreparedListener(mediaPlayer -> {
+
                     binding.progBar.setVisibility(View.GONE);
                     binding.imagePlay.setVisibility(View.VISIBLE);
-                    binding.seekBar.setMax(mediaPlayer.getDuration());
-                    binding.imagePlay.setImageResource(R.drawable.ic_play);
-                });
-
-                mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-                    binding.imagePlay.setImageResource(R.drawable.ic_play);
-                    binding.seekBar.setProgress(0);
-                    handler.removeCallbacks(runnable);
+                    binding.imagePlay.setImageResource(R.drawable.ic_pause);
+                    mediaPlayer.start();
 
                 });
+
+                mediaPlayer.setOnCompletionListener(md -> {
+                    if (mediaPlayer!=null)
+                    {
+                        mediaPlayer.release();
+                        mediaPlayer = null;
+                    }
+                    pos = -1;
+
+                    notifyDataSetChanged();
+                });
+
 
             } catch (IOException e) {
                 Log.e("eeeex", e.getMessage());
                 mediaPlayer.release();
                 mediaPlayer = null;
-                if (handler != null && runnable != null) {
-                    handler.removeCallbacks(runnable);
-                }
 
             }
-        }
 
-        private void updateProgress() {
-            binding.seekBar.setProgress(mediaPlayer.getCurrentPosition());
-            handler = new Handler();
-            runnable = this::updateProgress;
-            handler.postDelayed(runnable, 1000);
+
+
+
 
 
         }
 
-        public void BindData(final MessageModel messageModel) {
-            binding.progBar.setIndeterminate(true);
-            binding.progBar.setVisibility(View.VISIBLE);
-            binding.imagePlay.setVisibility(View.GONE);
-            binding.tvTime.setText(getTime(Long.parseLong(messageModel.getCreated_at())));
-            initAudio(messageModel);
-        }
+
+
 
 
     }
 
+
+    public void stopPlay() {
+
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+
+        }
+    }
 
     @Override
     public int getItemViewType(int position) {
@@ -474,9 +618,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void setBase_url_image(String url) {
         this.base_url_image = url;
+        this.base_url_audio = this.base_url_image + "audio/";
     }
 
-    public void setBase_url_audio(String base_url_audio) {
-        this.base_url_audio = base_url_audio;
-    }
+
+
+
 }

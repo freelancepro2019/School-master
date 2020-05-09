@@ -344,6 +344,7 @@ public interface MyInterface {
     @POST("chatting/Api/acceptAudioFile")
     Call<MessageModel> sendChatAudioFile(@Part("user_id") RequestBody user_id,
                                          @Part("to_user") RequestBody to_user,
+                                         @Part("chat_id") RequestBody chat_id,
                                          @Part MultipartBody.Part file
     );
 

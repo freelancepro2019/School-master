@@ -49,6 +49,10 @@ import com.softray_solutions.newschoolproject.service.ServiceDownload;
 import com.softray_solutions.newschoolproject.ui.activities.activity_file.FileActivity;
 import com.squareup.picasso.Picasso;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -82,10 +86,8 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     private String file_to_download = "";
     private boolean isPermissionGranted = false;
     private MediaRecorder recorder;
-    private String path;
+    private String path="";
     private MediaPlayer mediaPlayer;
-    private Handler handler;
-    private Runnable runnable;
     private final String audio_perm = Manifest.permission.RECORD_AUDIO;
     private final String write_permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -108,6 +110,8 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     @SuppressLint("ClickableViewAccessibility")
     private void initView() {
+        EventBus.getDefault().register(this);
+
         presenter = new ChatPresenter(this, this);
         messageModelList = new ArrayList<>();
         binding.progBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
@@ -123,13 +127,12 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         binding.tvName.setText(chatUserModel.getFrom_name());
         Picasso.get().load(Uri.parse(chatUserModel.getFrom_image())).placeholder(R.drawable.default_avatar).fit().into(binding.imageAvatar);
 
-        adapter = new ChatAdapter(messageModelList, this, user.getId(), chatUserModel.getFrom_image());
+        adapter = new ChatAdapter(messageModelList, this, user.getId(), chatUserModel.getFrom_image(),user.getImg());
 
         manager = new LinearLayoutManager(this);
-        manager.setStackFromEnd(true);
         binding.recView.setLayoutManager(manager);
         binding.recView.setAdapter(adapter);
-
+        binding.recView.setHasFixedSize(true);
         binding.imageFile.setOnClickListener(view -> {
             checkPermission();
         });
@@ -190,7 +193,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
                         recorder.stop();
                         mediaPlayer = null;
                         binding.flRecording.setVisibility(View.GONE);
-                        presenter.sendAudio(user.getId(),chatUserModel.getFrom_id(),"",path);
+                        presenter.sendAudio(user.getId(),chatUserModel.getFrom_id(),chatUserModel.getChat_id(),path);
 
 
                     } catch (Exception e) {
@@ -227,7 +230,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
         binding.recView.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             if (bottom < oldBottom) {
-                binding.recView.postDelayed(() -> binding.recView.smoothScrollToPosition(messageModelList.size() - 1), 10);
+                binding.recView.postDelayed(() -> binding.recView.scrollToPosition(messageModelList.size() - 1),30);
             }
 
         });
@@ -447,8 +450,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         isNewMessage = true;
         messageModelList.add(messageModel);
         adapter.notifyItemInserted(messageModelList.size() - 1);
-        binding.recView.postDelayed(() -> binding.recView.smoothScrollToPosition(messageModelList.size() - 1), 100);
-
+        binding.recView.postDelayed(() -> binding.recView.scrollToPosition(messageModelList.size() - 1),5);
     }
 
     @Override
@@ -461,8 +463,18 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         messageModelList.clear();
         messageModelList.addAll(messageDataModel.getRecords());
         adapter.notifyDataSetChanged();
-        binding.recView.postDelayed(() -> binding.recView.smoothScrollToPosition(messageModelList.size() - 1), 1500);
+        binding.recView.postDelayed(() -> binding.recView.scrollToPosition(messageModelList.size() - 1),5);
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void listenToNewAudio(MessageModel messageModel)
+    {
+        isNewMessage = true;
+        messageModelList.add(messageModel);
+        adapter.notifyItemInserted(messageModelList.size() - 1);
+        binding.recView.postDelayed(() -> binding.recView.scrollToPosition(messageModelList.size() - 1),5);
+        deleteFile();
     }
 
     @Override
@@ -512,36 +524,12 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
 
 
-/*
-    private void initAudio() {
-        try {
 
 
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setDataSource(path);
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mediaPlayer.setVolume(100.0f, 100.0f);
-            mediaPlayer.setLooping(false);
-            mediaPlayer.prepare();
-
-            mediaPlayer.start();
-
-
-        } catch (IOException e) {
-            Log.e("eeeex", e.getMessage());
-            mediaPlayer.release();
-            mediaPlayer = null;
-            if (handler != null && runnable != null) {
-                handler.removeCallbacks(runnable);
-            }
-
-        }
-    }
-*/
 
     private void initRecorder() {
         isPermissionGranted = true;
-        String audioName = "AUD" + System.currentTimeMillis() + ".mp3";
+        String audioName = "AUD" + System.currentTimeMillis() + ".wav";
 
         File folder_done = new File(Common.AudioPath);
 
@@ -595,5 +583,20 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             }
         }
         return false;
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().unregister(this);
+        }
+
+        if (adapter!=null)
+        {
+            adapter.stopPlay();
+        }
     }
 }

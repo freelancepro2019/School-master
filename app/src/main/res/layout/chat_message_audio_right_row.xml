@@ -39,21 +39,22 @@
 
                     <FrameLayout
                         android:id="@+id/flPlay"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         >
                         <ImageView
                             android:id="@+id/imagePlay"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_marginStart="10dp"
                             android:layout_marginEnd="10dp"
-                            android:padding="8dp"
+                            android:padding="5dp"
                             android:src="@drawable/ic_play"
-                            android:tint="@color/white"
+                            android:tint="@color/colorPrimary"
                             android:layout_gravity="center"
+                            android:background="@drawable/circle_white"
 
                             />
                         <ProgressBar
@@ -68,36 +69,42 @@
                     </FrameLayout>
 
 
-
-
-
-                    <SeekBar
+                    <View
                         android:id="@+id/seekBar"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        app:layout_constraintEnd_toStartOf="@id/tvDuration"
+                        android:layout_height="1dp"
+                        android:background="@color/white"
+                        app:layout_constraintEnd_toStartOf="@id/image"
                         app:layout_constraintStart_toEndOf="@id/flPlay"
                         app:layout_constraintTop_toTopOf="@id/flPlay"
                         app:layout_constraintBottom_toBottomOf="@id/flPlay"
-                        android:thumbTint="@color/white"
-                        android:progressBackgroundTint="@color/white"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
 
                         />
+                    <!-- <SeekBar
+                         android:id="@+id/seekBar"
+                         android:layout_width="0dp"
+                         android:layout_height="wrap_content"
+                         android:layout_marginStart="10dp"
+                         android:layout_marginEnd="10dp"
+                         app:layout_constraintEnd_toStartOf="@id/tvDuration"
+                         app:layout_constraintStart_toEndOf="@id/flPlay"
+                         app:layout_constraintTop_toTopOf="@id/flPlay"
+                         app:layout_constraintBottom_toBottomOf="@id/flPlay"
+                         android:thumbTint="@color/white"
+                         android:progressBackgroundTint="@color/white"
+
+                         />-->
 
 
-                    <TextView
-                        android:id="@+id/tvDuration"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="00:00"
-                        android:visibility="visible"
-                        android:textColor="@color/white"
-                        android:textSize="13sp"
-                        app:layout_constraintTop_toTopOf="@id/seekBar"
-                        app:layout_constraintBottom_toBottomOf="@id/seekBar"
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/image"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:src="@drawable/default_avatar"
                         />
 
 
@@ -108,7 +115,7 @@
                         android:textColor="@color/white"
                         android:textSize="14sp"
                         app:layout_constraintTop_toBottomOf="@id/flPlay"
-                        app:layout_constraintEnd_toStartOf="@id/tvDuration"
+                        app:layout_constraintEnd_toStartOf="@id/image"
                         app:layout_constraintStart_toStartOf="@id/flPlay"
                         android:layout_marginTop="5dp"
 
